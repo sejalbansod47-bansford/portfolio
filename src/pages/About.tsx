@@ -141,9 +141,8 @@ function PicsGallery() {
     <div
       ref={viewportRef}
       className="about__pics-scroll"
-      tabIndex={0}
       role="region"
-      aria-label="Photo gallery, scroll for more"
+      aria-label="Photo gallery, scroll with the mouse or trackpad"
     >
       <div ref={trackRef} className="about__pics-track">
         <img src="/about/sunset.png" alt="Sunset over a city rooftop" />

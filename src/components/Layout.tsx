@@ -27,7 +27,7 @@ export function Layout() {
           <div className="app-bg" aria-hidden="true">
             <SageGradient className="app-bg__canvas" />
           </div>
-          <a className="app-skip" href="#main-content">
+          <a className="app-skip" href="#home">
             Skip to content
           </a>
           <Nav />

@@ -24,7 +24,7 @@ export function StoryPage({
       </header>
       <ul className="story__cards">
         {cards.map((card) => (
-          <li key={card.title} className="story__card">
+          <li key={card.title} className="story__card" tabIndex={0}>
             <div className="story__card-head">
               <h3 className="story__card-title">{card.title}</h3>
               {card.line ? (

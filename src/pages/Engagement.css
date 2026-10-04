@@ -1,0 +1,345 @@
+/* In flow, not absolute like the other sections, so the list can grow past one
+   artboard as entries pile up. */
+.engage {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--frame-h, var(--artboard-h));
+  margin: 0;
+  padding: 200px 60px var(--page-inset);
+  outline: none;
+}
+
+.engage__header {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.engage__greeting {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--xp-title-size);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+  color: var(--color-on-gradient);
+}
+
+.engage__whisper {
+  margin: 0;
+  max-width: 28rem;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.3;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: right;
+  color: var(--a);
+}
+
+.engage__chips {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 40px;
+}
+
+/* Highlights are rings, shadow and a small lift — no pale fills over the
+   gradient, which washed out against it. */
+.engage__chip {
+  padding: 7px 14px;
+  border: 1px solid color-mix(in srgb, var(--a) 28%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--b);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition:
+    border-color var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease),
+    color var(--duration) var(--ease),
+    transform var(--duration) var(--ease);
+}
+
+.engage__chip:hover,
+.engage__chip:focus-visible {
+  color: var(--a);
+  border-color: var(--a);
+  box-shadow:
+    inset 0 0 0 1px var(--a),
+    0 4px 12px color-mix(in srgb, var(--a) 20%, transparent);
+  transform: scale(1.06);
+}
+
+.engage__chip:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* Selected = thicker ring + lift. No fill, so it cannot wash to cream. */
+.engage__chip.is-on {
+  background: transparent;
+  border-color: var(--a);
+  color: var(--a);
+  box-shadow:
+    inset 0 0 0 1.5px var(--a),
+    0 5px 14px color-mix(in srgb, var(--a) 22%, transparent);
+  transform: scale(1.08);
+}
+
+.engage__chip.is-on:hover,
+.engage__chip.is-on:focus-visible {
+  background: transparent;
+  color: var(--a);
+  box-shadow:
+    inset 0 0 0 1.5px var(--a),
+    0 5px 14px color-mix(in srgb, var(--a) 22%, transparent);
+}
+
+.engage__split {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 48px;
+  width: 100%;
+  min-height: var(--engage-panel-min-h);
+  margin-top: var(--engage-list-gap);
+}
+
+.engage__list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: visible;
+  border-top: 1px solid color-mix(in srgb, var(--a) 18%, transparent);
+}
+
+.engage__list > li {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.engage__tab {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  padding: 14px 12px;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--a) 18%, transparent);
+  border-left: 2px solid transparent;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transform-origin: left center;
+  transition:
+    border-color var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease),
+    transform var(--duration) var(--ease);
+}
+
+.engage__tab:hover,
+.engage__tab:focus-visible {
+  background: transparent;
+  box-shadow:
+    inset 0 0 0 1px var(--b),
+    0 4px 12px color-mix(in srgb, var(--a) 16%, transparent);
+  transform: translateX(3px) scale(1.02);
+}
+
+.engage__tab:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Selected row: left rule, a ring, a lift — never a cream fill */
+.engage__tab.is-on {
+  background: transparent;
+  border-left-color: var(--a);
+  box-shadow:
+    inset 0 0 0 1.5px var(--a),
+    0 6px 16px color-mix(in srgb, var(--a) 20%, transparent);
+  transform: translateX(4px) scale(1.03);
+}
+
+.engage__tab.is-on:hover,
+.engage__tab.is-on:focus-visible {
+  background: transparent;
+  transform: translateX(4px) scale(1.03);
+}
+
+.engage__tab-date {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--b);
+}
+
+.engage__tab-title {
+  font-family: var(--font-label);
+  font-size: 17px;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.engage__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 26px 30px 30px;
+  box-sizing: border-box;
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--d) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--f) 45%, transparent);
+  box-shadow: 0 4px 24px color-mix(in srgb, var(--a) 12%, transparent);
+}
+
+.engage__panel:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .engage__panel {
+    backdrop-filter: blur(var(--nav-glass-blur)) saturate(1.35);
+    -webkit-backdrop-filter: blur(var(--nav-glass-blur)) saturate(1.35);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .engage__panel {
+    background: var(--d);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+.engage__panel-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--b);
+}
+
+.engage__panel-kind {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.engage__panel-title {
+  margin: -8px 0 0;
+  font-family: var(--font-label);
+  font-size: var(--story-card-title-size);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.engage__panel-summary {
+  margin: 0;
+  max-width: 36rem;
+  font-family: var(--font-sans);
+  font-size: var(--text-lede-size);
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.engage__facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin: 4px 0 0;
+}
+
+.engage__fact dt {
+  margin: 0 0 6px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--b);
+}
+
+.engage__fact dd {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.engage__shots {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.engage__shot {
+  width: 132px;
+  height: 88px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--d) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--f) 45%, transparent);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .engage__shot {
+    backdrop-filter: blur(var(--nav-glass-blur)) saturate(1.35);
+    -webkit-backdrop-filter: blur(var(--nav-glass-blur)) saturate(1.35);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .engage__shot {
+    background: var(--d);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+.engage__empty {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--b);
+}
+
+/* Keep the rings, drop the movement */
+@media (prefers-reduced-motion: reduce) {
+  .engage__chip,
+  .engage__tab {
+    transition: none;
+  }
+
+  .engage__chip:hover,
+  .engage__chip:focus-visible,
+  .engage__tab:hover,
+  .engage__tab:focus-visible,
+  .engage__tab.is-on,
+  .engage__tab.is-on:hover,
+  .engage__tab.is-on:focus-visible {
+    transform: none;
+  }
+}

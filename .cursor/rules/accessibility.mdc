@@ -1,0 +1,30 @@
+---
+description: Accessibility is required on every UI component and interaction in this project.
+alwaysApply: true
+---
+
+# Accessibility
+
+Every component, layout, and interaction we design or implement must be usable with keyboard, screen reader, and visible focus — not mouse/hover only.
+
+## Required
+
+- **Keyboard:** Tab/Shift+Tab through all controls. Enter/Space activate. Escape closes menus, dialogs, and overlays and returns focus to the trigger. Arrow keys move within `role="menu"` lists.
+- **Visible focus:** `:focus-visible` must be as clear as hover. Never `outline: none` without a replacement. Prefer the Figma hover wash plus inset (nav lists: 4px pad, item fills the cell). Pills/buttons use `outline: 2px solid var(--color-focus)` (`--c` / `#BBCAC5`) and `outline-offset: 2px`.
+- **Do not** put hover styles only inside `@media (hover: hover)` without a matching `:focus-visible` rule.
+- **Names:** Icon-only controls need `aria-label`. Menus need `aria-expanded`, `aria-haspopup`, and `aria-controls`.
+- **Motion:** Honor `prefers-reduced-motion`. Do not convey state with animation or color alone.
+
+```css
+/* ❌ BAD — keyboard user sees nothing */
+.item:hover { background: var(--e); }
+.item:focus { outline: none; }
+
+/* ✅ GOOD — hover and keyboard share the same language */
+.item:hover,
+.item:focus-visible {
+  background: color-mix(in srgb, var(--e) 30%, transparent);
+}
+```
+
+Before calling UI done, Tab through the changed control and confirm the focused item is obvious.

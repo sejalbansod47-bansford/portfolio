@@ -1,0 +1,126 @@
+/* Design tokens from Figma Frame 28 (165:92). See DESIGN.md. */
+
+:root {
+  /* Primitives — canvas swatches a–f. Frame 28 uses b, d, e. */
+  --a: #2a534c;
+  --b: #6b827a;
+  --c: #bbcac5;
+  --d: #dfdfd7;
+  --e: #f8f5ee;
+  --f: #ffffff;
+
+  --color-page: var(--e);
+  --color-band: var(--b);
+  --color-card: var(--d);
+  --color-on-band: var(--d);
+  /* Display headings over the sage gradient; small text uses --color-ink */
+  --color-on-gradient: var(--b);
+  --color-ink: var(--a);
+  --color-muted: var(--b);
+  --color-white: var(--f);
+  --color-chip: var(--d);
+  --color-focus: var(--c);
+
+  --bg: var(--color-page);
+  --ink: var(--color-ink);
+  --muted: var(--color-muted);
+  --chip: var(--color-chip);
+  --surface: var(--color-card);
+
+  --font-display: 'Material Symbols Rounded', sans-serif;
+  --font-sans: 'Mona Sans', system-ui, sans-serif;
+  --font-label: 'Mona Sans', system-ui, sans-serif;
+  --font-icons: 'Material Symbols Rounded';
+  --font-home-name: var(--font-display);
+  --font-mono: 'Mona Sans', ui-monospace, monospace;
+
+  /* Frame 32 Material Symbols, then −30% vs the last display size */
+  --text-display-size: 83px;
+  --text-display-tracking: 8px;
+  --text-display-leading: 1.12;
+  /* Frame 40: 140 / 155, two-line name */
+  --text-home-name-size: 140px;
+  --text-home-name-tracking: 0;
+  --text-home-name-leading: 155px;
+  --text-home-name-color: var(--color-on-gradient);
+  --text-lede-size: 20px;
+  --text-lede-leading: 30px;
+  --text-nav-size: 16px;
+  --text-card-label-size: 20px;
+  --text-card-label-leading: 30px;
+
+  --artboard-w: 1280px;
+  --artboard-h: 832px;
+  --artboard-scale: 1;
+  --page-about-h: 1273px;
+  /* Frame 28 About cards (~431×403 / 428×403 / 427×402) */
+  --about-card-w: 344px;
+  --about-card-h: 322px;
+  --about-card-gap: 39px;
+  --about-card-bottom-pad: 40px;
+  /* Flip side holds a paragraph — smaller than the page lede */
+  --about-card-back-size: 14px;
+  --page-experience-h: 1273px;
+  --xp-title-size: 60px;
+  /* Studio tool names (was 64px, −30%) */
+  --xp-tool-title-size: 45px;
+  --xp-studio-w: 1224px;
+  --xp-studio-h: 788px;
+  --xp-record: #e84848;
+  --xp-save-ink: #dfe8ff;
+  /* Projects: two cards, half the page each */
+  --story-card-top: 320px;
+  --story-card-gap: 24px;
+  --story-card-title-size: 30px;
+  /* Engagement split view */
+  --engage-list-gap: 78px;
+  --engage-panel-min-h: 382px;
+  --page-inset: 40px;
+  --content-w: calc(var(--artboard-w) - 2 * var(--page-inset));
+  --about-intro-gap: 8px;
+  --about-stack-gap: 40px;
+  --gutter: 20px;
+  --grid-columns: 18;
+
+  --nav-top: 0px;
+  --nav-width: var(--artboard-w);
+  /* Frame 36 full-bleed bar, scaled ~20% (70 → 56) */
+  --nav-height: 56px;
+  --nav-pad-x: 32px;
+  --nav-pad-y: 10px;
+  --nav-gap: 26px;
+  --nav-item-height: 35px;
+  --nav-home-w: 26px;
+  --nav-home-h: 25px;
+  --nav-person-w: 13px;
+  --nav-person-h: 15px;
+
+  --nav-band-gap: 0px;
+
+  --band-h: 402px;
+  --band-top: calc(var(--nav-top) + var(--nav-height) + var(--nav-band-gap));
+  --band-footer-top: 1076px;
+  --band-footer-h: 197px;
+
+  --card-w: 387px;
+  --card-h: 364px;
+  --card-pad-x: 16px;
+  --card-pad-y: 17px;
+  --card-gap: 42px;
+  --radius-card: 10px;
+  --radius-sm: 10px;
+  --nav-bar-radius: var(--radius-sm);
+  --nav-item-radius: 0;
+  --nav-menu-row-h: var(--nav-item-height);
+  --nav-menu-item-radius: 2px;
+  /* Match pill height; light pad so row ≈ nav item */
+  --nav-menu-pad: 2px;
+  --nav-glass-blur: 18px;
+
+  --xp-studio-scale: 0.8;
+  --xp-dot-c: #c3c3bd;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration: 220ms;
+  --duration-enter: 260ms;
+}

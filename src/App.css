@@ -1,0 +1,89 @@
+.app-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  overflow: hidden;
+}
+
+.app-scale {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.app-frame {
+  position: relative;
+  width: var(--artboard-w);
+  height: var(--frame-h, var(--artboard-h));
+  overflow: hidden;
+  transform-origin: top left;
+  background: var(--bg);
+}
+
+.app-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.app-bg__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* First tab stop — off screen until focused */
+.app-skip {
+  position: absolute;
+  z-index: 60;
+  top: var(--nav-pad-y);
+  left: var(--page-inset);
+  display: inline-flex;
+  align-items: center;
+  height: var(--nav-item-height);
+  padding: 8px 12px;
+  box-sizing: border-box;
+  border-radius: var(--nav-item-radius);
+  background: var(--b);
+  color: var(--d);
+  box-shadow: 0 4px 4px color-mix(in srgb, var(--a) 25%, transparent);
+  font-family: var(--font-sans);
+  font-size: var(--text-nav-size);
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  transform: translateY(calc(-100% - 16px));
+  transition: transform var(--duration) var(--ease);
+}
+
+.app-skip:focus-visible {
+  transform: none;
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.app-main {
+  position: relative;
+  z-index: 1;
+  width: var(--artboard-w);
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-band) var(--color-page);
+}
+
+/* The scroll region is a tab stop so it can be arrow-scrolled — show it */
+.app-main:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+.app-main > * {
+  animation: mp-enter var(--duration-enter) var(--ease) both;
+}

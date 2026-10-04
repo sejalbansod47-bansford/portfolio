@@ -1,0 +1,555 @@
+/* Frame 28 / 34 / 39 — About: horizontal side-scroll cards + flip backs */
+
+/* No overflow here — any overflow value would break the sticky pin inside .app-main */
+.about {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+
+/* Three screens tall: vertical page scroll through it drives the horizontal rail */
+.about__pin-wrap {
+  position: relative;
+  height: calc(var(--frame-h, var(--artboard-h)) * 3);
+}
+
+.about__sticky {
+  position: sticky;
+  top: 0;
+  height: var(--frame-h, var(--artboard-h));
+  /* Visible so 3D card flips aren’t clipped mid-rotate */
+  overflow: visible;
+}
+
+.about__body {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--about-stack-gap);
+  width: 100%;
+  height: 100%;
+  padding: calc(var(--nav-top) + var(--nav-height) + var(--about-stack-gap)) 0 0;
+  box-sizing: border-box;
+}
+
+.about__intro {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--about-intro-gap);
+  width: var(--content-w);
+  margin: 0 auto;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.about__hello {
+  margin: 0;
+  font-family: var(--font-display);
+  /* Matches the Experience section heading */
+  font-size: var(--xp-title-size);
+  font-weight: 400;
+  line-height: var(--text-display-leading);
+  letter-spacing: var(--text-display-tracking);
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+  font-feature-settings: 'liga' 0, 'dlig' 0, 'calt' 0, 'rlig' 0;
+  font-variant-ligatures: none;
+  color: var(--color-on-gradient);
+}
+
+.about__viewport {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  /* Visible so flip swing isn’t cropped; page still clips via .about overflow-x */
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  /* Room for hover lift + mid-flip corners */
+  padding-top: 48px;
+  padding-bottom: var(--about-card-bottom-pad);
+  box-sizing: border-box;
+}
+
+.about__rail {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--about-card-gap);
+  width: max-content;
+  margin: 0;
+  padding: 0 var(--page-inset);
+  list-style: none;
+}
+
+/* Shell — perspective only; glass lives on faces */
+.about__card {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  width: var(--about-card-w);
+  height: var(--about-card-h);
+  padding: 0;
+  box-sizing: border-box;
+  overflow: visible;
+  perspective: 1600px;
+  perspective-origin: 50% 40%;
+  transform-style: preserve-3d;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.about__card:hover,
+.about__card:focus-within,
+.about__card.is-flipped {
+  z-index: 8;
+}
+
+.about__card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.7s var(--ease);
+  /* Keep mid-flip within the padded viewport */
+  will-change: transform;
+}
+
+.about__card.is-flipped .about__card-inner {
+  transform: rotateY(180deg);
+}
+
+.about__card-face {
+  position: absolute;
+  inset: 0;
+  padding: var(--card-pad-y) var(--card-pad-x);
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--d) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--f) 45%, transparent);
+  box-shadow: 0 4px 24px color-mix(in srgb, var(--a) 12%, transparent);
+  backdrop-filter: blur(var(--nav-glass-blur)) saturate(1.35);
+  -webkit-backdrop-filter: blur(var(--nav-glass-blur)) saturate(1.35);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.about__card-face--back {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  pointer-events: none;
+}
+
+.about__card.is-flipped .about__card-face--front {
+  pointer-events: none;
+}
+
+.about__card.is-flipped .about__card-face--back {
+  pointer-events: auto;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .about__card-face {
+    background: color-mix(in srgb, var(--d) 88%, var(--e));
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .about__card-face {
+    background: var(--d);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .about__card:hover .about__card-inner,
+  .about__card:focus-within .about__card-inner {
+    transform: translateY(-3px);
+  }
+
+  .about__card.is-flipped:hover .about__card-inner,
+  .about__card.is-flipped:focus-within .about__card-inner {
+    transform: translateY(-3px) rotateY(180deg);
+  }
+}
+
+.about__card:focus-within .about__card-inner {
+  transform: translateY(-3px);
+}
+
+.about__card.is-flipped:focus-within .about__card-inner {
+  transform: translateY(-3px) rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about__card-inner {
+    transition: none;
+  }
+
+  .about__card.is-flipped .about__card-inner {
+    transform: none;
+  }
+
+  .about__card.is-flipped .about__card-face--front {
+    visibility: hidden;
+  }
+
+  .about__card:not(.is-flipped) .about__card-face--back {
+    visibility: hidden;
+  }
+
+  .about__card.is-flipped .about__card-face--back {
+    transform: none;
+  }
+}
+
+.about__card-title {
+  position: relative;
+  z-index: 4;
+  display: inline-block;
+  margin: 0;
+  padding: 0 0 4px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-label);
+  font-size: var(--text-card-label-size);
+  font-weight: 400;
+  line-height: var(--text-card-label-leading);
+  letter-spacing: 0;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* Underline draws left → right on hover / keyboard focus */
+.about__card-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  height: 1.5px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.4s var(--ease);
+  pointer-events: none;
+}
+
+.about__card-title:hover::after,
+.about__card-title:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.about__card-title:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about__card-title::after {
+    transition: none;
+  }
+}
+
+.about__card-back-text {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--font-sans);
+  font-size: var(--about-card-back-size);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.about__card-face img {
+  display: block;
+  max-width: none;
+}
+
+/* Digital Art */
+.about__blob {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  z-index: 1;
+  width: min(208px, 62%);
+  height: min(208px, 62%);
+  transform: translate(-50%, -42%);
+  border-radius: 50%;
+  background: var(--color-page);
+}
+
+.about__frog {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  z-index: 2;
+  width: 134px;
+  height: 134px;
+  transform: translate(-50%, -45%);
+  image-rendering: pixelated;
+}
+
+.about__ghost-wrap {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--e);
+}
+
+.about__ghost {
+  width: 43px;
+  height: 43px;
+  image-rendering: pixelated;
+}
+
+/* Designing */
+.about__design {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 58px;
+  bottom: 18px;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: var(--radius-sm);
+}
+
+/* Pictures — translate track (native overflow breaks inside 3D flip cards) */
+.about__card--pics .about__card-face--front {
+  overflow: hidden;
+}
+
+.about__pics-scroll {
+  position: absolute;
+  left: var(--card-pad-x);
+  right: var(--card-pad-x);
+  top: 56px;
+  bottom: 16px;
+  z-index: 5;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  touch-action: none;
+  cursor: grab;
+  pointer-events: auto;
+}
+
+.about__pics-scroll:active {
+  cursor: grabbing;
+}
+
+.about__pics-scroll:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.about__pics-track {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  will-change: transform;
+}
+
+.about__pics-track img {
+  display: block;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 363 / 214;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Singing — Frame 34 (387×364 artboard, scaled to card) */
+.about__card--singing .about__card-face--front {
+  overflow: hidden;
+}
+
+.about__singing {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.about__conductor {
+  position: absolute;
+  left: calc(18 / 387 * 100%);
+  top: calc(124 / 364 * 100%);
+  width: calc(199 / 387 * 100%);
+  height: calc(240 / 364 * 100%);
+  object-fit: contain;
+  object-position: center bottom;
+  /* Figma: -scale-y + rotate(180) → mirror horizontally */
+  transform: scaleX(-1);
+}
+
+.about__notes {
+  position: absolute;
+  inset: 0;
+}
+
+.about__note {
+  position: absolute;
+  object-fit: contain;
+}
+
+/* Note placements from Frame 34 Singing Card (design context) */
+.about__note--21 {
+  left: calc(172 / 387 * 100%);
+  top: calc(-26 / 364 * 100%);
+  width: calc(25 / 387 * 100%);
+  height: calc(68 / 364 * 100%);
+  transform: scaleY(-1);
+}
+
+.about__note--20 {
+  left: calc(201 / 387 * 100%);
+  top: calc(8 / 364 * 100%);
+  width: calc(43 / 387 * 100%);
+  height: calc(52 / 364 * 100%);
+}
+
+.about__note--26a {
+  left: calc(253 / 387 * 100%);
+  top: calc(8 / 364 * 100%);
+  width: calc(20 / 387 * 100%);
+  height: calc(35 / 364 * 100%);
+  transform: scaleY(-1) rotate(1.68deg);
+}
+
+.about__note--26b {
+  left: calc(332 / 387 * 100%);
+  top: calc(49 / 364 * 100%);
+  width: calc(51 / 387 * 100%);
+  height: calc(36 / 364 * 100%);
+  transform: scaleY(-1) rotate(104.71deg);
+}
+
+.about__note--32a {
+  left: calc(285 / 387 * 100%);
+  top: calc(17 / 364 * 100%);
+  width: calc(25 / 387 * 100%);
+  height: calc(60 / 364 * 100%);
+  transform: scaleY(-1);
+}
+
+.about__note--32b {
+  left: calc(182 / 387 * 100%);
+  top: calc(53 / 364 * 100%);
+  width: calc(70 / 387 * 100%);
+  height: calc(41 / 364 * 100%);
+  transform: rotate(76.85deg);
+}
+
+.about__note--25a {
+  left: calc(259 / 387 * 100%);
+  top: calc(42 / 364 * 100%);
+  width: calc(26 / 387 * 100%);
+  height: calc(66 / 364 * 100%);
+}
+
+.about__note--25b {
+  left: calc(254 / 387 * 100%);
+  top: calc(53 / 364 * 100%);
+  width: calc(9 / 387 * 100%);
+  height: calc(22 / 364 * 100%);
+}
+
+.about__note--24a {
+  left: calc(323 / 387 * 100%);
+  top: calc(135 / 364 * 100%);
+  width: calc(18 / 387 * 100%);
+  height: calc(22 / 364 * 100%);
+}
+
+.about__note--24b {
+  left: calc(312 / 387 * 100%);
+  top: calc(-7 / 364 * 100%);
+  width: calc(50 / 387 * 100%);
+  height: calc(60 / 364 * 100%);
+  transform: scaleY(-1);
+}
+
+.about__note--21b {
+  left: calc(298 / 387 * 100%);
+  top: calc(64 / 364 * 100%);
+  width: calc(31 / 387 * 100%);
+  height: calc(84 / 364 * 100%);
+}
+
+.about__note--20b {
+  left: calc(341 / 387 * 100%);
+  top: calc(148 / 364 * 100%);
+  width: calc(11 / 387 * 100%);
+  height: calc(14 / 364 * 100%);
+}
+
+/* Sports */
+.about__card--sports .about__card-face--front {
+  overflow: visible;
+}
+
+.about__shuttle {
+  position: absolute;
+  top: 46px;
+  left: 118px;
+  z-index: 2;
+  width: 93px;
+  height: 94px;
+  object-fit: contain;
+}
+
+.about__paddles {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  z-index: 2;
+  width: 86px;
+  height: 75px;
+  object-fit: contain;
+}
+
+.about__swimmers {
+  position: absolute;
+  right: 13px;
+  bottom: 14px;
+  z-index: 1;
+  width: 131px;
+  height: 131px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}

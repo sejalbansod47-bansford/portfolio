@@ -1,0 +1,17 @@
+---
+description: Figma file safety and design-system source of truth (Frame 28).
+alwaysApply: true
+---
+
+# Figma
+
+Full rules: `figma.md`. Tokens: `DESIGN.md`, `src/design-tokens.css`.
+
+- **NEVER** overwrite, edit, restyle, move, delete, or replace existing Figma frames, layers, pages, styles, variables, or the file unless the user explicitly names that change.
+- Read-only extract is always OK. Writes (`figma_execute`, create/update/delete) need explicit permission.
+- “Build a design system” or “match the design” is **not** permission to mutate Figma.
+- Source of truth: Frame **28** (`165:92`) in `cGXi7VlAdpaLg8y6wBI8UG`. Use Console MCP / REST. Do not guess colors or fonts.
+- UI implementation: `~/.cursor/skills/design-lane/SKILL.md`.
+- Implement with `var(--*)` from `src/design-tokens.css`. No new raw hex or extra font families.
+- New Figma nodes only if asked, on empty canvas, never overlapping existing work.
+- Official Figma MCP is quota-limited — do not use it for inventory.

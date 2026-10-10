@@ -1,21 +1,21 @@
 .story {
   position: relative;
+  box-sizing: border-box;
   width: 100%;
   min-height: var(--frame-h, var(--artboard-h));
   margin: 0;
-  padding: 0;
+  padding: calc(var(--nav-top) + var(--nav-height) + 24px) 60px
+    var(--page-inset);
   outline: none;
 }
 
 .story__header {
-  position: absolute;
-  left: 60px;
-  top: 200px;
+  position: relative;
   z-index: 3;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  width: 1160px;
+  width: 100%;
 }
 
 .story__greeting {
@@ -44,17 +44,14 @@
   color: var(--a);
 }
 
-/* Two cards, half the page each, filling the rest of the artboard */
+/* Two cards, half the page each. Cyber Shield grows with video + copy. */
 .story__cards {
-  position: absolute;
-  left: var(--page-inset);
-  right: var(--page-inset);
-  top: var(--story-card-top);
-  bottom: var(--page-inset);
+  position: relative;
   z-index: 2;
   display: flex;
+  align-items: stretch;
   gap: var(--story-card-gap);
-  margin: 0;
+  margin: 40px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -64,6 +61,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  gap: 16px;
   padding: 28px 30px;
   box-sizing: border-box;
   border-radius: var(--radius-card);
@@ -94,10 +92,19 @@
   .story__card:focus-within {
     transform: translateY(-3px);
   }
+
+  .story__card--play:hover,
+  .story__card--play:focus-within {
+    transform: none;
+  }
 }
 
 .story__card:focus-within {
   transform: translateY(-3px);
+}
+
+.story__card--play:focus-within {
+  transform: none;
 }
 
 .story__card:focus-visible {
@@ -128,4 +135,29 @@
   font-weight: 400;
   line-height: 1.4;
   color: var(--ink);
+}
+
+.story__card-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  font-family: var(--font-sans);
+  font-size: var(--about-card-back-size);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.story__card-copy p {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story__card,
+  .story__card:hover,
+  .story__card:focus-within {
+    transition: none;
+    transform: none;
+  }
 }

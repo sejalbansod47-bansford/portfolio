@@ -1,4 +1,5 @@
 import { GlyphText } from '../components/GlyphText'
+import { SequentialClips } from '../components/SequentialClips'
 import type { StoryCopy } from './copy'
 import './StoryPage.css'
 
@@ -23,16 +24,36 @@ export function StoryPage({
         <p className="story__whisper">{whisper}</p>
       </header>
       <ul className="story__cards">
-        {cards.map((card) => (
-          <li key={card.title} className="story__card" tabIndex={0}>
-            <div className="story__card-head">
-              <h3 className="story__card-title">{card.title}</h3>
-              {card.line ? (
-                <p className="story__card-line">{card.line}</p>
+        {cards.map((card) => {
+          const playable = Boolean(card.clips?.length)
+          return (
+            <li
+              key={card.title}
+              className={playable ? 'story__card story__card--play' : 'story__card'}
+              tabIndex={playable ? undefined : 0}
+            >
+              <div className="story__card-head">
+                <h3 className="story__card-title">{card.title}</h3>
+                {card.line ? (
+                  <p className="story__card-line">{card.line}</p>
+                ) : null}
+              </div>
+              {card.clips?.length ? (
+                <SequentialClips
+                  clips={card.clips}
+                  label={`${card.title} gameplay`}
+                />
               ) : null}
-            </div>
-          </li>
-        ))}
+              {card.body?.length ? (
+                <div className="story__card-copy">
+                  {card.body.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </div>
+              ) : null}
+            </li>
+          )
+        })}
       </ul>
     </section>
   )

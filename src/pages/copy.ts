@@ -1,6 +1,8 @@
 export type StoryCard = {
   title: string
   line?: string
+  body?: string[]
+  clips?: string[]
 }
 
 export type StoryCopy = {
@@ -12,13 +14,31 @@ export type StoryCopy = {
 export const projectsCopy: StoryCopy = {
   greeting: 'Projects',
   whisper: 'TWO THINGS I BUILT',
-  cards: [],
+  cards: [
+    {
+      title: 'Is This For Real',
+      line: 'A question I had to test, not just ask.',
+    },
+    {
+      title: 'Cyber Shield',
+      line: 'Protection, made visible.',
+      clips: [
+        '/projects/cyber-shield/clip-1.mp4',
+        '/projects/cyber-shield/clip-2.mp4',
+      ],
+      body: [
+        'I am a cyber student, not a games-tech one. Games design still sits close to me, so this module project is dear: I built the Unreal skills for it, and I am proud of that.',
+        'Nottinghamshire Police asked for a formative educational game for teenagers — mini games that teach cyber security by playing it. I sat on both the design and development teams and built the third level, the closer.',
+        'The level is ransomware. You have fallen victim to an attack and have to recover a stolen directory folder while bots patrol, catch, and eliminate you. Capture the objective, get out, and the game moves on. I designed the level, characters, environment, animations, camera, start and end UI, and the scripting — movement, win and lose, the fade-and-respawn when you are caught.',
+        'I started as group leader: planning, splitting the teams, assigning Trello tasks, weekly meetings, Teams updates. Every level had a demo the whole team playtested; I also tested and debugged my own.',
+      ],
+    },
+  ],
 }
 
-export const projectLines: Record<string, string> = {
-  'Is This For Real': 'A question I had to test, not just ask.',
-  'Cyber Shield': 'Protection, made visible.',
-}
+export const projectLines: Record<string, string> = Object.fromEntries(
+  projectsCopy.cards.map((card) => [card.title, card.line ?? '']),
+)
 
 export const experienceRole = {
   title: 'Test Engineer',

@@ -2,16 +2,11 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { isSectionId, scrollToSection } from '../lib/sections'
 import { About } from './About'
-import { projectLines, projectsCopy } from './copy'
+import { projectsCopy } from './copy'
 import { Engagement } from './Engagement'
 import { Experience } from './Experience'
 import { Home } from './Home'
 import { StoryPage } from './StoryPage'
-
-const projectCards = Object.entries(projectLines).map(([title, line]) => ({
-  title,
-  line,
-}))
 
 export function OnePage() {
   const { hash } = useLocation()
@@ -29,7 +24,7 @@ export function OnePage() {
     <div className="onepage">
       <Home />
       <Experience />
-      <StoryPage id="projects" {...projectsCopy} cards={projectCards} />
+      <StoryPage id="projects" {...projectsCopy} />
       <About />
       <Engagement />
     </div>

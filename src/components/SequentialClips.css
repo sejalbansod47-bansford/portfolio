@@ -1,0 +1,30 @@
+.seq-clips {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.seq-clips__video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1280 / 700;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  background: var(--a);
+}
+
+.seq-clips__video:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.seq-clips__count {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--a);
+}

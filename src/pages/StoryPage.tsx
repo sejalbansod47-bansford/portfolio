@@ -45,7 +45,12 @@ export function StoryPage({
                 />
               ) : null}
               {card.body?.length ? (
-                <div className="story__card-copy">
+                <div
+                  className="story__card-copy"
+                  tabIndex={0}
+                  role="region"
+                  aria-label={`${card.title} write-up`}
+                >
                   {card.body.map((paragraph) => (
                     <p key={paragraph}>{paragraph}</p>
                   ))}

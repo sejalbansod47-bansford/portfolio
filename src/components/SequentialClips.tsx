@@ -56,6 +56,7 @@ export function SequentialClips({ clips, label }: SequentialClipsProps) {
     }
     const shouldPlay = userPlayingRef.current || !reduce
     if (!shouldPlay) return
+    video.muted = true
     void video.play().catch(() => {
       /* Autoplay can be blocked; native controls stay available. */
     })
@@ -73,6 +74,12 @@ export function SequentialClips({ clips, label }: SequentialClipsProps) {
         playsInline
         controls
         preload="metadata"
+        onLoadedData={() => {
+          const video = videoRef.current
+          if (!video || !inView) return
+          if (!(userPlayingRef.current || !reduce)) return
+          void video.play().catch(() => {})
+        }}
         onPlay={() => {
           userPlayingRef.current = true
         }}

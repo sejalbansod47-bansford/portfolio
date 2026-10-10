@@ -1,8 +1,11 @@
 .story {
   position: relative;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   min-height: var(--frame-h, var(--artboard-h));
+  height: var(--frame-h, var(--artboard-h));
   margin: 0;
   padding: calc(var(--nav-top) + var(--nav-height) + 24px) 60px
     var(--page-inset);
@@ -50,7 +53,9 @@
   z-index: 2;
   display: flex;
   align-items: stretch;
+  flex: 1 1 auto;
   gap: var(--story-card-gap);
+  min-height: 0;
   margin: 40px 0 0;
   padding: 0;
   list-style: none;
@@ -59,6 +64,7 @@
 .story__card {
   flex: 1 1 0;
   min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -142,11 +148,19 @@
   flex-direction: column;
   gap: 10px;
   min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding-right: 4px;
   font-family: var(--font-sans);
   font-size: var(--about-card-back-size);
   font-weight: 400;
   line-height: 1.5;
   color: var(--ink);
+}
+
+.story__card-copy:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
 .story__card-copy p {

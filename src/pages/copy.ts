@@ -84,7 +84,7 @@ export const experienceRole = {
 
 export const engagementCopy = {
   greeting: 'Engagement',
-  whisper: 'THIS PART IS STILL GROWING',
+  whisper: 'TWO ROOMS, THEN A TOOL',
 }
 
 export type EngagementKind =
@@ -93,77 +93,80 @@ export type EngagementKind =
   | 'Initiative'
   | 'Community'
 
+export type EngagementPhoto = {
+  src: string
+  alt: string
+}
+
 export type EngagementEntry = {
   id: string
   /** Month and year, shown in place of a running number */
   date: string
   title: string
   kind: EngagementKind
-  /** The one line a closed row carries */
+  /** Short enough to sit in a half width card */
   summary: string
   where: string
-  did: string
-  took: string
-  /** Empty photo slots until the real shots land */
-  shots: number
+  link?: { href: string; label: string }
+  photos: EngagementPhoto[]
 }
 
 /** Newest first. */
 export const engagementEntries: EngagementEntry[] = [
   {
-    id: 'list-1',
-    date: 'Mar 2026',
-    title: 'List 1',
+    id: 'accel-tracelab',
+    date: '15 Oct 2026',
+    title: 'TraceLab at Accel',
     kind: 'Hackathon',
-    summary: 'One line on what the weekend turned into.',
-    where: 'Placeholder venue, placeholder city.',
-    did: 'Placeholder for what I actually built or ran on the day.',
-    took: 'Placeholder for the one idea worth repeating.',
-    shots: 3,
+    summary:
+      'The first hackathon I left with a finished product. At Accel AI Innovate London I built TraceLab. You drop private copies of a photo. It shows which ones belong together and what changed. A separate sceptic can throw a claim out. The brief is for a person to read, not a courtroom verdict.',
+    where: '83 Rivington Street, London. One day, building long running Claude agents.',
+    link: {
+      href: 'https://tracelab-app.vercel.app',
+      label: 'Open TraceLab',
+    },
+    photos: [
+      {
+        src: '/engagement/accel-room.jpg',
+        alt: 'The Accel AI Innovate London room, with the Accel title on the screen above the bar.',
+      },
+      {
+        src: '/engagement/accel-habits.jpg',
+        alt: 'A talk slide at Accel: four habits of agents that run for hours.',
+      },
+      {
+        src: '/engagement/accel-build.jpg',
+        alt: 'A talk slide at Accel: Build it. Let it run. Prove it worked.',
+      },
+      {
+        src: '/engagement/tracelab-home.jpg',
+        alt: 'The TraceLab site. Same photo, different story, with copies labelled A to D.',
+      },
+      {
+        src: '/engagement/tracelab-drop.jpg',
+        alt: 'The TraceLab screen where you drop picture copies, with the reference photo first.',
+      },
+    ],
   },
   {
-    id: 'list-2',
-    date: 'Jan 2026',
-    title: 'List 2',
-    kind: 'Conference',
-    summary: 'One line on the talk or the room that stuck.',
-    where: 'Placeholder venue, placeholder city.',
-    did: 'Placeholder for the sessions I sat in and who I spoke to.',
-    took: 'Placeholder for a discussion point worth bringing home.',
-    shots: 3,
-  },
-  {
-    id: 'list-3',
-    date: 'Nov 2025',
-    title: 'List 3',
-    kind: 'Initiative',
-    summary: 'One line on something I started rather than attended.',
-    where: 'Placeholder for the project it belonged to.',
-    did: 'Placeholder for the thing I set up and kept running.',
-    took: 'Placeholder for what it is reusable for next.',
-    shots: 2,
-  },
-  {
-    id: 'list-4',
-    date: 'Sep 2025',
-    title: 'List 4',
+    id: 'first-hackathons',
+    date: 'Aug to Sep 2026',
+    title: 'Cursor and Tech Europe',
     kind: 'Hackathon',
-    summary: 'One line on the idea that did not survive the night.',
-    where: 'Placeholder venue, placeholder city.',
-    did: 'Placeholder for the half I owned and the half I handed over.',
-    took: 'Placeholder for what I would scope differently.',
-    shots: 2,
-  },
-  {
-    id: 'list-5',
-    date: 'Jul 2025',
-    title: 'List 5',
-    kind: 'Community',
-    summary: 'One line on the people side of it.',
-    where: 'Placeholder for the group or society.',
-    did: 'Placeholder for the part I played.',
-    took: 'Placeholder for what changed afterwards.',
-    shots: 2,
+    summary:
+      'My first two hackathons. Neither ended with a finished product. Cursor Cybersecurity London is where I started using agentic AI, and I have used it ever since. Tech Europe showed me how people in tech now build with it. I networked and tried the agents.',
+    where:
+      'London. Cursor at Paris Garden on 1 August. Tech Europe at Ilona Rose House on 19 September.',
+    photos: [
+      {
+        src: '/engagement/cursor-london.jpg',
+        alt: 'Event page for the Cursor Cybersecurity London Hackathon on 1 August at Halkin, Paris Garden.',
+      },
+      {
+        src: '/engagement/tech-europe.jpg',
+        alt: 'Event page for the Tech Europe Agentic AI Hack on 19 September at Ilona Rose House, London.',
+      },
+    ],
   },
 ]
 

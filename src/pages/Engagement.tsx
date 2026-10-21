@@ -1,50 +1,39 @@
-import { useRef, useState, type KeyboardEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { GlyphText } from '../components/GlyphText'
-import { engagementCopy, engagementEntries, engagementKinds } from './copy'
-import type { EngagementEntry, EngagementKind } from './copy'
+import { engagementCopy, engagementEntries } from './copy'
 import './Engagement.css'
 
-type Filter = 'All' | EngagementKind
-
-const filters: Filter[] = ['All', ...engagementKinds]
+type OpenPhoto = { entryId: string; index: number }
 
 /**
- * Titles on the left, one entry open on the right — the same shape as the
- * Experience studio. Every row is in the tab order; arrows still move between
- * them once one has focus.
+ * Two short cards. Photos stay as a thumbnail row so the card does not grow
+ * with every picture. A photo opens larger; Escape closes it.
  */
 export function Engagement() {
-  const [filter, setFilter] = useState<Filter>('All')
-  const [picked, setPicked] = useState<string | null>(null)
-  const listRef = useRef<HTMLUListElement>(null)
+  const [open, setOpen] = useState<OpenPhoto | null>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
+  const triggerRef = useRef<HTMLButtonElement | null>(null)
 
-  const shown =
-    filter === 'All'
-      ? engagementEntries
-      : engagementEntries.filter((entry) => entry.kind === filter)
-  const active = shown.find((entry) => entry.id === picked) ?? shown[0]
+  const openEntry = engagementEntries.find((entry) => entry.id === open?.entryId)
+  const openPhoto = open && openEntry ? openEntry.photos[open.index] : undefined
 
-  const onKeyDown = (event: KeyboardEvent<HTMLUListElement>) => {
-    const keys = ['ArrowDown', 'ArrowUp', 'Home', 'End']
-    if (!keys.includes(event.key) || shown.length === 0) return
-    const focusedId =
-      shown.find((entry) => `${entry.id}-tab` === document.activeElement?.id)
-        ?.id ?? active?.id
-    if (!focusedId) return
-    event.preventDefault()
-    const index = shown.findIndex((entry) => entry.id === focusedId)
-    const next =
-      event.key === 'ArrowDown'
-        ? (index + 1) % shown.length
-        : event.key === 'ArrowUp'
-          ? (index - 1 + shown.length) % shown.length
-          : event.key === 'Home'
-            ? 0
-            : shown.length - 1
-    setPicked(shown[next].id)
-    listRef.current
-      ?.querySelector<HTMLElement>(`#${shown[next].id}-tab`)
-      ?.focus()
+  useEffect(() => {
+    if (!openPhoto) return
+    closeRef.current?.focus({ preventScroll: true })
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      event.preventDefault()
+      setOpen(null)
+      triggerRef.current?.focus()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [openPhoto])
+
+  const close = () => {
+    setOpen(null)
+    triggerRef.current?.focus()
   }
 
   return (
@@ -65,89 +54,75 @@ export function Engagement() {
         <p className="engage__whisper">{engagementCopy.whisper}</p>
       </header>
 
-      <div className="engage__chips" role="group" aria-label="Filter by kind">
-        {filters.map((value) => (
-          <button
-            key={value}
-            type="button"
-            className={filter === value ? 'engage__chip is-on' : 'engage__chip'}
-            aria-pressed={filter === value}
-            onClick={() => setFilter(value)}
-          >
-            {value}
-          </button>
-        ))}
-      </div>
-
-      <div className="engage__split">
-        <ul
-          className="engage__list"
-          aria-label="Engagement entries"
-          ref={listRef}
-          onKeyDown={onKeyDown}
-        >
-          {shown.map((entry) => {
-            const selected = entry.id === active?.id
-            return (
-              <li key={entry.id}>
-                <button
-                  type="button"
-                  id={`${entry.id}-tab`}
-                  className={selected ? 'engage__tab is-on' : 'engage__tab'}
-                  aria-current={selected ? 'true' : undefined}
-                  aria-controls={`${entry.id}-panel`}
-                  onClick={() => setPicked(entry.id)}
-                >
-                  <span className="engage__tab-date">{entry.date}</span>
-                  <span className="engage__tab-title">{entry.title}</span>
-                </button>
-              </li>
-            )
-          })}
-        </ul>
-
-        {active ? (
-          <div
-            className="engage__panel"
-            id={`${active.id}-panel`}
-            aria-labelledby={`${active.id}-tab`}
-          >
-            <p className="engage__panel-meta">
-              <span>{active.date}</span>
-              <span className="engage__panel-kind">{active.kind}</span>
+      <ul className="engage__cards">
+        {engagementEntries.map((entry) => (
+          <li key={entry.id} className="engage__card">
+            <p className="engage__meta">
+              <span>{entry.date}</span>
+              <span className="engage__kind">{entry.kind}</span>
             </p>
-            <h3 className="engage__panel-title">{active.title}</h3>
-            <p className="engage__panel-summary">{active.summary}</p>
-            <Facts entry={active} />
-            <ul className="engage__shots" aria-label="Photos to come">
-              {Array.from({ length: active.shots }, (_, i) => (
-                <li key={i} className="engage__shot" />
+            <h3 className="engage__title">{entry.title}</h3>
+            <p className="engage__summary">{entry.summary}</p>
+            <p className="engage__where">{entry.where}</p>
+            {entry.link ? (
+              <a
+                className="engage__link"
+                href={entry.link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {entry.link.label}
+                <span className="engage__sr"> (opens in a new tab)</span>
+              </a>
+            ) : null}
+            <ul className="engage__shots" aria-label={`${entry.title} photos`}>
+              {entry.photos.map((photo, index) => (
+                <li key={photo.src}>
+                  <button
+                    type="button"
+                    className="engage__shot"
+                    aria-label={`View larger. ${photo.alt}`}
+                    onClick={(event) => {
+                      triggerRef.current = event.currentTarget
+                      setOpen({ entryId: entry.id, index })
+                    }}
+                  >
+                    <img src={photo.src} alt="" />
+                  </button>
+                </li>
               ))}
             </ul>
-          </div>
-        ) : (
-          <p className="engage__empty">Nothing under that filter yet.</p>
-        )}
-      </div>
-    </section>
-  )
-}
+          </li>
+        ))}
+      </ul>
 
-function Facts({ entry }: { entry: EngagementEntry }) {
-  return (
-    <dl className="engage__facts">
-      <div className="engage__fact">
-        <dt>Where</dt>
-        <dd>{entry.where}</dd>
-      </div>
-      <div className="engage__fact">
-        <dt>What I did</dt>
-        <dd>{entry.did}</dd>
-      </div>
-      <div className="engage__fact">
-        <dt>What I took</dt>
-        <dd>{entry.took}</dd>
-      </div>
-    </dl>
+      {openPhoto
+        ? createPortal(
+            <div className="engage__lightbox" onClick={close}>
+              <div
+                className="engage__lightbox-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-label={openPhoto.alt}
+                onClick={(event) => event.stopPropagation()}
+                onKeyDown={(event) => {
+                  if (event.key === 'Tab') event.preventDefault()
+                }}
+              >
+                <button
+                  ref={closeRef}
+                  type="button"
+                  className="engage__lightbox-close"
+                  onClick={close}
+                >
+                  Close
+                </button>
+                <img src={openPhoto.src} alt={openPhoto.alt} />
+              </div>
+            </div>,
+            document.querySelector('.app-frame') ?? document.body,
+          )
+        : null}
+    </section>
   )
 }

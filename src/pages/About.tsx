@@ -8,8 +8,8 @@ type CardId = 'art' | 'design' | 'pics' | 'singing' | 'sports'
 const CARD_BACK: Record<CardId, string> = {
   art: 'I enjoy making digital art. It is what I do in my free time, and easily my favourite hobby.',
   design:
-    'I started designing back when putting aesthetic photos on Instagram was the trend. I got into colour palettes, and into matching the text against the colours already in a photo — that was the start of it. Not long after, I picked up Figma, and here we are: this portfolio was designed in it.',
-  pics: 'I love capturing how beautiful nature is, especially sunrises and sunsets. A camera never quite does them justice, but I try anyway and add them to my gallery. I like holding on to serene moments and showing the world — well, my Instagram followers — how I see it.',
+    'I started designing back when putting aesthetic photos on Instagram was the trend. I got into colour palettes, and into matching the text against the colours already in a photo. That was the start of it. Not long after, I picked up Figma, and here we are: this portfolio was designed in it.',
+  pics: 'I love capturing how beautiful nature is, especially sunrises and sunsets. A camera never quite does them justice, but I try anyway and add them to my gallery. I like holding on to serene moments and showing the world, well, my Instagram followers, how I see it.',
   singing:
     'I have been singing ever since I discovered Ariana Grande. Mum used to tell me off for disturbing the neighbours with my screaming, but after moving to the UK I finally gave those screams a platform. I joined the NTU choir and performed with the BBC orchestra at the Royal Concert Hall in Nottingham in 2025, and I have been part of it ever since :)',
   sports:

@@ -4,6 +4,8 @@ import './SequentialClips.css'
 type SequentialClipsProps = {
   clips: string[]
   label: string
+  /** Frame 43 stage: fill the box, no chrome, autoplay in view. */
+  variant?: 'default' | 'stage'
 }
 
 function prefersReducedMotion() {
@@ -14,14 +16,18 @@ function prefersReducedMotion() {
 }
 
 /** Plays a short list of muted clips in order, then the next, while on screen. */
-export function SequentialClips({ clips, label }: SequentialClipsProps) {
+export function SequentialClips({
+  clips,
+  label,
+  variant = 'default',
+}: SequentialClipsProps) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const indexRef = useRef(0)
-  const userPlayingRef = useRef(false)
   const [index, setIndex] = useState(0)
   const [inView, setInView] = useState(false)
   const [reduce, setReduce] = useState(prefersReducedMotion)
+  const stage = variant === 'stage'
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -35,9 +41,9 @@ export function SequentialClips({ clips, label }: SequentialClipsProps) {
     if (!node) return
     const io = new IntersectionObserver(
       ([entry]) => {
-        setInView(entry.isIntersecting && entry.intersectionRatio >= 0.35)
+        setInView(entry.isIntersecting && entry.intersectionRatio >= 0.2)
       },
-      { threshold: [0, 0.35, 0.6, 1] },
+      { threshold: [0, 0.2, 0.35, 0.6, 1] },
     )
     io.observe(node)
     return () => io.disconnect()
@@ -54,34 +60,34 @@ export function SequentialClips({ clips, label }: SequentialClipsProps) {
       video.pause()
       return
     }
-    const shouldPlay = userPlayingRef.current || !reduce
-    if (!shouldPlay) return
     video.muted = true
     void video.play().catch(() => {
-      /* Autoplay can be blocked; native controls stay available. */
+      /* Autoplay can be blocked; the stage has no play control by design. */
     })
-  }, [index, inView, reduce])
+  }, [index, inView])
 
   if (clips.length === 0) return null
 
   return (
-    <div className="seq-clips" ref={wrapRef}>
+    <div
+      className={stage ? 'seq-clips seq-clips--stage' : 'seq-clips'}
+      ref={wrapRef}
+    >
       <video
         ref={videoRef}
         className="seq-clips__video"
         src={clips[index]}
         muted
         playsInline
-        controls
-        preload="metadata"
+        autoPlay
+        preload="auto"
+        controls={false}
+        disablePictureInPicture
         onLoadedData={() => {
           const video = videoRef.current
           if (!video || !inView) return
-          if (!(userPlayingRef.current || !reduce)) return
+          video.muted = true
           void video.play().catch(() => {})
-        }}
-        onPlay={() => {
-          userPlayingRef.current = true
         }}
         onEnded={() => {
           const next = indexRef.current + 1
@@ -90,15 +96,15 @@ export function SequentialClips({ clips, label }: SequentialClipsProps) {
             return
           }
           if (reduce) {
-            userPlayingRef.current = false
             setIndex(0)
+            videoRef.current?.pause()
             return
           }
           setIndex(0)
         }}
         aria-label={`${label}, clip ${index + 1} of ${clips.length}`}
       />
-      <p className="seq-clips__count" aria-live="polite">
+      <p className="seq-clips__count visually-hidden" aria-live="polite">
         Clip {index + 1} of {clips.length}
       </p>
     </div>

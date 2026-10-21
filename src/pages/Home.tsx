@@ -3,7 +3,7 @@ import './Home.css'
 
 export function Home() {
   return (
-    <section id="home" className="hero" aria-label="Home" tabIndex={-1}>
+    <section id="home" className="hero" aria-label="Home" tabIndex={0}>
       <h1
         className="hero__name"
         data-testid="hero-name"

@@ -1,3 +1,4 @@
+/* Frame 43 closed / Frame 44 plus-open. Coordinates from 399:262 / 399:278. */
 .story {
   position: relative;
   box-sizing: border-box;
@@ -7,26 +8,24 @@
   min-height: var(--frame-h, var(--artboard-h));
   height: var(--frame-h, var(--artboard-h));
   margin: 0;
-  padding: calc(var(--nav-top) + var(--nav-height) + 24px) 60px
-    var(--page-inset);
+  padding: 74px var(--page-inset) 0;
   outline: none;
 }
 
 .story__header {
   position: relative;
   z-index: 3;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
   width: 100%;
 }
 
 .story__greeting {
   margin: 0;
+  width: 610px;
+  height: 132px;
   font-family: var(--font-display);
-  font-size: var(--xp-title-size);
+  font-size: 70px;
   font-weight: 400;
-  line-height: 1;
+  line-height: 155px;
   letter-spacing: 0;
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
   font-feature-settings: 'liga' 0, 'dlig' 0, 'calt' 0, 'rlig' 0;
@@ -34,144 +33,281 @@
   color: var(--color-on-gradient);
 }
 
-.story__whisper {
-  margin: 0;
-  max-width: 28rem;
-  font-family: var(--font-sans);
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.3;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  text-align: right;
-  color: var(--a);
-}
-
-/* Two cards, half the page each. Cyber Shield grows with video + copy. */
-.story__cards {
+.story__board {
   position: relative;
   z-index: 2;
-  display: flex;
-  align-items: stretch;
-  flex: 1 1 auto;
-  gap: var(--story-card-gap);
-  min-height: 0;
-  margin: 40px 0 0;
-  padding: 0;
-  list-style: none;
+  display: grid;
+  grid-template-columns: 891px 292px;
+  gap: 17px;
+  width: var(--content-w);
+  height: 468px;
+  margin-top: 42px;
 }
 
-.story__card {
-  flex: 1 1 0;
-  min-width: 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 28px 30px;
-  box-sizing: border-box;
+.story__stage {
+  position: relative;
+  width: 891px;
+  height: 468px;
+  overflow: hidden;
   border-radius: var(--radius-card);
-  background: color-mix(in srgb, var(--d) 55%, transparent);
-  border: 1px solid color-mix(in srgb, var(--f) 45%, transparent);
-  box-shadow: 0 4px 24px color-mix(in srgb, var(--a) 12%, transparent);
-  color: var(--ink);
-  transition: transform var(--duration) var(--ease);
+  background: var(--a);
+}
+
+.story__plus,
+.story__minus {
+  position: absolute;
+  right: 13px;
+  bottom: 13px;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--e);
+  cursor: pointer;
+}
+
+.story__plus[hidden],
+.story__minus[hidden] {
+  display: none;
+}
+
+.story__plus-svg {
+  display: block;
+  width: 50px;
+  height: 50px;
+}
+
+.story__plus:hover,
+.story__plus:focus-visible,
+.story__minus:hover,
+.story__minus:focus-visible {
+  color: var(--d);
+}
+
+.story__plus:focus-visible,
+.story__minus:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.story__depth {
+  position: absolute;
+  right: 7px;
+  bottom: 8px;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto auto 1fr;
+  column-gap: 20px;
+  row-gap: 0;
+  box-sizing: border-box;
+  width: 617px;
+  height: 245px;
+  padding: 17px 58px 58px 38px;
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--b) 30%, transparent);
+  color: var(--c);
 }
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .story__card {
-    backdrop-filter: blur(var(--nav-glass-blur)) saturate(1.35);
-    -webkit-backdrop-filter: blur(var(--nav-glass-blur)) saturate(1.35);
+  .story__depth {
+    backdrop-filter: blur(12px) saturate(1.2);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
   }
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .story__card {
-    background: var(--d);
+  .story__depth {
+    background: var(--b);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .story__card:hover,
-  .story__card:focus-within {
-    transform: translateY(-3px);
-  }
-
-  .story__card--play:hover,
-  .story__card--play:focus-within {
-    transform: none;
-  }
+.story__depth[hidden] {
+  display: none;
 }
 
-.story__card:focus-within {
-  transform: translateY(-3px);
-}
-
-.story__card--play:focus-within {
-  transform: none;
-}
-
-.story__card:focus-visible {
+.story__depth:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 
-.story__card-head {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.story__card-title {
+.story__depth-label {
   margin: 0;
-  font-family: var(--font-label);
-  font-size: var(--story-card-title-size);
-  font-weight: 400;
-  line-height: 1.2;
-  color: var(--ink);
-}
-
-.story__card-line {
-  margin: 0;
-  max-width: 24rem;
   font-family: var(--font-sans);
-  font-size: var(--text-lede-size);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 40px;
+  color: var(--c);
+}
+
+.story__depth-rule {
+  grid-column: 1 / -1;
+  height: 1px;
+  margin: 0 0 10px;
+  background: var(--c);
+}
+
+.story__depth-body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
   font-weight: 400;
   line-height: 1.4;
-  color: var(--ink);
+  color: var(--d);
 }
 
-.story__card-copy {
+.story__aside {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  min-height: 0;
-  flex: 1 1 auto;
-  overflow-y: auto;
-  padding-right: 4px;
-  font-family: var(--font-sans);
-  font-size: var(--about-card-back-size);
-  font-weight: 400;
-  line-height: 1.5;
-  color: var(--ink);
+  width: 292px;
+  height: 468px;
+  padding: 18px 10px 12px 26px;
+  border-radius: var(--radius-card);
+  background: var(--b);
+  color: var(--d);
 }
 
-.story__card-copy:focus-visible {
+/* Scrollbar stays painted (not macOS overlay) so the panel reads as scrollable */
+.story__aside-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-top: 12px;
+  padding: 0 12px 12px 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: var(--radius-sm);
+  /* .app-main's scrollbar-color inherits and would disable ::-webkit-scrollbar */
+  scrollbar-color: auto;
+}
+
+/* Chromium drops ::-webkit-scrollbar when these are set, so Firefox only */
+@supports not selector(::-webkit-scrollbar) {
+  .story__aside-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--c) color-mix(in srgb, var(--a) 35%, transparent);
+  }
+}
+
+.story__aside-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.story__aside-scroll::-webkit-scrollbar-track {
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--a) 35%, transparent);
+}
+
+.story__aside-scroll::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: var(--c);
+}
+
+.story__aside-scroll:hover::-webkit-scrollbar-thumb,
+.story__aside-scroll:focus-visible::-webkit-scrollbar-thumb {
+  background: var(--d);
+}
+
+.story__aside-scroll:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 
-.story__card-copy p {
+.story__aside-title {
   margin: 0;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 40px;
+  letter-spacing: 0;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+  font-feature-settings: 'liga' 0, 'dlig' 0, 'calt' 0, 'rlig' 0;
+  font-variant-ligatures: none;
+  color: var(--d);
+}
+
+.story__aside-break {
+  display: block;
+}
+
+.story__aside-list {
+  margin: 0;
+  padding: 0 0 0 1.1em;
+  list-style: disc;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--d);
+}
+
+.story__aside-list li {
+  margin: 0 0 8px;
+}
+
+.story__aside-list li::marker {
+  color: var(--c);
+}
+
+.story__aside-kicker {
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--c);
+}
+
+.story__aside-future {
+  margin: 6px 0 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--d);
+}
+
+.story__stills {
+  display: grid;
+  gap: 12px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.story__still-figure {
+  margin: 0;
+}
+
+.story__still {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1024 / 640;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.story__still-name {
+  margin: 6px 0 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  color: var(--c);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .story__card,
-  .story__card:hover,
-  .story__card:focus-within {
+  .story__plus {
     transition: none;
-    transform: none;
   }
 }

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { getScrollRoot, offsetWithin } from '../lib/sections'
+import { getScrollRoot, isSectionId, offsetWithin } from '../lib/sections'
 
 const ABOUT_ORDER = ['art', 'design', 'pics', 'singing', 'sports'] as const
 const NAV_PAD = 80
@@ -22,6 +22,10 @@ export function useFocusScroll() {
         revealAboutCard(root, aboutCard)
         return
       }
+
+      // Nav already parked the section at its start. Do not pull it back
+      // under the previous page (that left titles mid-viewport).
+      if (isSectionId(target.id)) return
 
       const top = offsetWithin(target, root)
       const height = Math.max(target.offsetHeight, 1)

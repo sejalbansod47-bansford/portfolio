@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
 import { isSectionId, scrollToSection } from '../lib/sections'
 import { About } from './About'
 import { projectsCopy } from './copy'
@@ -9,16 +8,14 @@ import { Home } from './Home'
 import { StoryPage } from './StoryPage'
 
 export function OnePage() {
-  const { hash } = useLocation()
-
   useEffect(() => {
-    const id = hash.slice(1)
+    const id = window.location.hash.slice(1)
     if (!isSectionId(id)) return
     const raf = requestAnimationFrame(() =>
-      scrollToSection(id, { smooth: false, focus: false }),
+      scrollToSection(id, { focus: false }),
     )
     return () => cancelAnimationFrame(raf)
-  }, [hash])
+  }, [])
 
   return (
     <div className="onepage">

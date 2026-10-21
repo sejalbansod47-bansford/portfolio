@@ -28,18 +28,32 @@ export function offsetWithin(el: HTMLElement, root: HTMLElement) {
   return top
 }
 
+type SectionListener = (id: SectionId) => void
+const sectionListeners = new Set<SectionListener>()
+
+/** Nav highlight follows this, not just native scroll (which can lag a frame). */
+export function subscribeActiveSection(fn: SectionListener) {
+  sectionListeners.add(fn)
+  return () => {
+    sectionListeners.delete(fn)
+  }
+}
+
+function emitActiveSection(id: SectionId) {
+  sectionListeners.forEach((fn) => fn(id))
+}
+
 export function scrollToSection(
   id: SectionId,
-  { smooth = true, focus = true }: { smooth?: boolean; focus?: boolean } = {},
+  { focus = true }: { smooth?: boolean; focus?: boolean } = {},
 ) {
   const root = getScrollRoot()
   const el = document.getElementById(id)
   if (!root || !el) return
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  root.scrollTo({
-    top: id === 'home' ? 0 : offsetWithin(el, root),
-    behavior: smooth && !reduce ? 'smooth' : 'auto',
-  })
+  const top = id === 'home' ? 0 : offsetWithin(el, root)
+  root.scrollTop = top
+  emitActiveSection(id)
+  root.dispatchEvent(new Event('scroll'))
   window.history.replaceState(null, '', id === 'home' ? '/' : `#${id}`)
   if (focus) el.focus({ preventScroll: true })
 }

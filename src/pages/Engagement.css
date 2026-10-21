@@ -6,7 +6,7 @@
   width: 100%;
   min-height: var(--frame-h, var(--artboard-h));
   margin: 0;
-  padding: 200px 60px var(--page-inset);
+  padding: calc(var(--nav-top) + var(--nav-height) + 24px) 60px var(--page-inset);
   outline: none;
 }
 
@@ -54,56 +54,59 @@
 /* Highlights are rings, shadow and a small lift — no pale fills over the
    gradient, which washed out against it. */
 .engage__chip {
+  position: relative;
   padding: 7px 14px;
   border: 1px solid color-mix(in srgb, var(--a) 28%, transparent);
   border-radius: 999px;
   background: transparent;
-  color: var(--b);
+  color: var(--a);
   font-family: var(--font-sans);
   font-size: 13px;
   line-height: 1;
   letter-spacing: 0.06em;
   cursor: pointer;
+  transform-origin: center center;
   transition:
+    background-color var(--duration) var(--ease),
     border-color var(--duration) var(--ease),
     box-shadow var(--duration) var(--ease),
     color var(--duration) var(--ease),
     transform var(--duration) var(--ease);
 }
 
+/* Hover / keyboard: nav 2px inset --c ring, plus the list-tab drop
+   shadow and lift. */
 .engage__chip:hover,
 .engage__chip:focus-visible {
+  z-index: 1;
   color: var(--a);
-  border-color: var(--a);
-  box-shadow:
-    inset 0 0 0 1px var(--a),
-    0 4px 12px color-mix(in srgb, var(--a) 20%, transparent);
-  transform: scale(1.06);
-}
-
-.engage__chip:focus-visible {
+  background: color-mix(in srgb, var(--e) 30%, transparent);
+  border-color: transparent;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--a) 16%, transparent);
   outline: 2px solid var(--color-focus);
-  outline-offset: 3px;
+  outline-offset: -2px;
+  transform: translateY(-3px) scale(1.02);
 }
 
-/* Selected = thicker ring + lift. No fill, so it cannot wash to cream. */
+/* Selected fill; hover still uses the nav dropdown ring + tab lift. */
 .engage__chip.is-on {
-  background: transparent;
-  border-color: var(--a);
+  background: color-mix(in srgb, var(--d) 60%, transparent);
+  border-color: transparent;
   color: var(--a);
-  box-shadow:
-    inset 0 0 0 1.5px var(--a),
-    0 5px 14px color-mix(in srgb, var(--a) 22%, transparent);
-  transform: scale(1.08);
+  box-shadow: inset 0 0 0 1px var(--c);
+  transform: none;
 }
 
 .engage__chip.is-on:hover,
 .engage__chip.is-on:focus-visible {
-  background: transparent;
+  z-index: 1;
+  background: color-mix(in srgb, var(--d) 60%, transparent);
   color: var(--a);
-  box-shadow:
-    inset 0 0 0 1.5px var(--a),
-    0 5px 14px color-mix(in srgb, var(--a) 22%, transparent);
+  border-color: transparent;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--a) 16%, transparent);
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+  transform: translateY(-3px) scale(1.02);
 }
 
 .engage__split {
@@ -148,13 +151,13 @@
   cursor: pointer;
   transform-origin: left center;
   transition:
+    background-color var(--duration) var(--ease),
     border-color var(--duration) var(--ease),
     box-shadow var(--duration) var(--ease),
     transform var(--duration) var(--ease);
 }
 
-.engage__tab:hover,
-.engage__tab:focus-visible {
+.engage__tab:hover {
   background: transparent;
   box-shadow:
     inset 0 0 0 1px var(--b),
@@ -163,31 +166,34 @@
 }
 
 .engage__tab:focus-visible {
+  background: transparent;
+  box-shadow: none;
+  transform: translateX(3px) scale(1.02);
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 
-/* Selected row: left rule, a ring, a lift — never a cream fill */
+/* Selected row matches the filter chip: --d at 60%. Type stays --a */
 .engage__tab.is-on {
-  background: transparent;
-  border-left-color: var(--a);
-  box-shadow:
-    inset 0 0 0 1.5px var(--a),
-    0 6px 16px color-mix(in srgb, var(--a) 20%, transparent);
-  transform: translateX(4px) scale(1.03);
+  background: color-mix(in srgb, var(--d) 60%, transparent);
+  border-left-color: var(--c);
+  box-shadow: inset 0 0 0 1px var(--c);
+  transform: none;
 }
 
 .engage__tab.is-on:hover,
 .engage__tab.is-on:focus-visible {
-  background: transparent;
-  transform: translateX(4px) scale(1.03);
+  background: color-mix(in srgb, var(--d) 60%, transparent);
+  border-left-color: var(--c);
+  box-shadow: inset 0 0 0 1px var(--c);
+  transform: none;
 }
 
 .engage__tab-date {
   font-family: var(--font-sans);
   font-size: 12px;
   letter-spacing: 0.08em;
-  color: var(--b);
+  color: var(--a);
 }
 
 .engage__tab-title {
@@ -237,7 +243,7 @@
   font-family: var(--font-sans);
   font-size: 13px;
   letter-spacing: 0.08em;
-  color: var(--b);
+  color: var(--a);
 }
 
 .engage__panel-kind {
@@ -277,7 +283,7 @@
   font-size: 12px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--b);
+  color: var(--a);
 }
 
 .engage__fact dd {
@@ -323,7 +329,7 @@
   margin: 0;
   font-family: var(--font-sans);
   font-size: 15px;
-  color: var(--b);
+  color: var(--a);
 }
 
 /* Keep the rings, drop the movement */

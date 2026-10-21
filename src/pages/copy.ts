@@ -19,31 +19,66 @@ export const projectsCopy: StoryCopy = {
       title: 'Is This For Real',
       line: 'A question I had to test, not just ask.',
     },
+  ],
+}
+
+export const projectLines: Record<string, string> = {
+  'Is This For Real': 'A question I had to test, not just ask.',
+  'Cyber Shield': 'Protection, made visible.',
+}
+
+export const cyberShieldCopy = {
+  title: 'Cyber Shield',
+  clips: [
+    '/projects/cyber-shield/clip-3.mp4',
+    '/projects/cyber-shield/clip-1.mp4',
+    '/projects/cyber-shield/clip-2.mp4',
+  ],
+  /** Right panel. Scan friendly proof for a hiring manager. */
+  highlights: [
+    'Client: Nottinghamshire Police. A ransomware closer for teenagers, not a lecture.',
+    'Owned the third mini game end to end: map, characters, animation, camera, UI, and scripts.',
+    'Taught myself Unreal Engine 5 to ship catch and respawn, then playtested it with the team.',
+    'Group lead: sat on design and development, planned the work, and unblocked people.',
+  ],
+  /** Overlay. Ransomware as a chase, for schools and anyone new to security. */
+  explain: [
     {
-      title: 'Cyber Shield',
-      line: 'Protection, made visible.',
-      clips: [
-        '/projects/cyber-shield/clip-1.mp4',
-        '/projects/cyber-shield/clip-2.mp4',
-      ],
-      body: [
-        'I am a cyber student, not a games-tech one. Games design still sits close to me, so this module project is dear: I built the Unreal skills for it, and I am proud of that.',
-        'Nottinghamshire Police asked for a formative educational game for teenagers — mini games that teach cyber security by playing it. I sat on both the design and development teams and built the third level, the closer.',
-        'The level is ransomware. You have fallen victim to an attack and have to recover a stolen directory folder while bots patrol, catch, and eliminate you. Capture the objective, get out, and the game moves on. I designed the level, characters, environment, animations, camera, start and end UI, and the scripting — movement, win and lose, the fade-and-respawn when you are caught.',
-        'I started as group leader: planning, splitting the teams, assigning Trello tasks, weekly meetings, Teams updates. Every level had a demo the whole team playtested; I also tested and debugged my own.',
-      ],
+      label: 'The idea',
+      body: 'Ransomware holds your files hostage until you pay. This game lets you see that chase. You already got hit. The folder is what they stole, and you have to get it back.',
+    },
+    {
+      label: 'How you play',
+      body: 'Pick up the folder and the Defender.exe sword, then leave through the exit. If the bots see you, the screen fades. They caught you. Then you try again.',
+    },
+    {
+      label: 'In real life',
+      body: 'The folder is your files. Defender.exe is antivirus, the tool that fights back. The bots are the malware. Fade then retry is restoring a backup.',
+    },
+  ],
+  future: {
+    label: 'Future scope',
+    body: 'Grab the sword, fight the bots, beat the ransomware. This version only lets you take the items and leave.',
+  },
+  stillsLabel: 'When you finish the level',
+  stills: [
+    {
+      src: '/projects/cyber-shield/exit.jpg',
+      name: 'The exit',
+      alt: 'The player at the exit door under a glowing Cyber Shield Up sign, with the prompt Press F to open or close the door.',
+    },
+    {
+      src: '/projects/cyber-shield/complete.jpg',
+      name: 'Certified Cyber Defender',
+      alt: 'The win screen: You are now a Certified Cyber Defender. Protecting your files and defenses early is the key to staying safe.',
     },
   ],
 }
 
-export const projectLines: Record<string, string> = Object.fromEntries(
-  projectsCopy.cards.map((card) => [card.title, card.line ?? '']),
-)
-
 export const experienceRole = {
   title: 'Test Engineer',
   company: 'Thrive Learning',
-  dates: 'June 2025 – present',
+  dates: 'June 2025 to present',
   tenure: 'fourteen months',
 }
 

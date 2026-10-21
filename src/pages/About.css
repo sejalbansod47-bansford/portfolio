@@ -9,10 +9,10 @@
   outline: none;
 }
 
-/* Three screens tall: vertical page scroll through it drives the horizontal rail */
+/* Two screens tall: vertical page scroll through it drives the horizontal rail */
 .about__pin-wrap {
   position: relative;
-  height: calc(var(--frame-h, var(--artboard-h)) * 3);
+  height: calc(var(--frame-h, var(--artboard-h)) * 2);
 }
 
 .about__sticky {
@@ -145,6 +145,36 @@
   -webkit-backface-visibility: hidden;
 }
 
+/* Quiet sheen across the glass face. Transform and opacity only. */
+.about__card-face::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 42%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--e) 72%, transparent),
+    transparent
+  );
+  transform: translateX(-160%);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.65s var(--ease),
+    opacity var(--duration) var(--ease);
+}
+
+.about__card:not(.is-flipped):is(:hover, :focus-within)
+  .about__card-face--front::after,
+.about__card.is-flipped:is(:hover, :focus-within)
+  .about__card-face--back::after {
+  opacity: 1;
+  transform: translateX(280%);
+}
+
 .about__card-face--back {
   transform: rotateY(180deg);
   display: flex;
@@ -197,6 +227,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .about__card-face::after {
+    transition: none;
+    transform: none;
+    opacity: 0;
+  }
+
   .about__card-inner {
     transition: none;
   }

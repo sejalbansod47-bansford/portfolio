@@ -13,7 +13,6 @@
   background: transparent;
   overflow: visible;
   isolation: isolate;
-  pointer-events: none;
 }
 
 .mp-nav__glass {

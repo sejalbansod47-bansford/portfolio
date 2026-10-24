@@ -334,8 +334,7 @@ function Dropdown({
             event.key === 'ArrowDown' ||
             event.key === 'ArrowUp' ||
             event.key === 'Enter' ||
-            event.key === ' ' ||
-            (event.key === 'Tab' && !event.shiftKey)
+            event.key === ' '
           if (!openMenu) return
           event.preventDefault()
           focusFirst.current = true

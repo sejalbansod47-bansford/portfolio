@@ -57,3 +57,18 @@ export function scrollToSection(
   window.history.replaceState(null, '', id === 'home' ? '/' : `#${id}`)
   if (focus) el.focus({ preventScroll: true })
 }
+
+/** Park a block inside a section, and highlight that section immediately. */
+export function scrollToAnchor(id: SectionId, anchor: string) {
+  const root = getScrollRoot()
+  const el = document.getElementById(anchor)
+  if (!root || !el) {
+    scrollToSection(id)
+    return
+  }
+  root.scrollTop = offsetWithin(el, root)
+  emitActiveSection(id)
+  root.dispatchEvent(new Event('scroll'))
+  window.history.replaceState(null, '', `#${anchor}`)
+  el.focus({ preventScroll: true })
+}

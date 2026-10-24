@@ -16,15 +16,19 @@ export const projectsCopy: StoryCopy = {
   whisper: 'TWO THINGS I BUILT',
   cards: [
     {
-      title: 'Is This For Real',
-      line: 'A question I had to test, not just ask.',
+      title: 'Cyber Shield',
+      line: 'Protection, made visible.',
+    },
+    {
+      title: 'TraceLab',
+      line: 'Same photo. Different story.',
     },
   ],
 }
 
 export const projectLines: Record<string, string> = {
-  'Is This For Real': 'A question I had to test, not just ask.',
   'Cyber Shield': 'Protection, made visible.',
+  TraceLab: 'Same photo. Different story.',
 }
 
 export const cyberShieldCopy = {
@@ -84,7 +88,7 @@ export const experienceRole = {
 
 export const engagementCopy = {
   greeting: 'Engagement',
-  whisper: 'TWO ROOMS, THEN A TOOL',
+  whisper: 'THE ONE I SHIPPED',
 }
 
 export type EngagementKind =
@@ -119,12 +123,8 @@ export const engagementEntries: EngagementEntry[] = [
     title: 'TraceLab at Accel',
     kind: 'Hackathon',
     summary:
-      'The first hackathon I left with a finished product. At Accel AI Innovate London I built TraceLab. You drop private copies of a photo. It shows which ones belong together and what changed. A separate sceptic can throw a claim out. The brief is for a person to read, not a courtroom verdict.',
+      'Accel handed out credits from a lot of companies, and the task was a swarm of agents. That is where TraceLab came from. The digital investigations module made me want a way to gather evidence when a picture has been changed. You drop private copies of one photo. It shows which belong together and what changed. A separate sceptic can throw a claim out. The pictures stay in the tool. Next it can tell when a whole file is hidden inside another file, and when generative AI changed a picture.',
     where: '83 Rivington Street, London. One day, building long running Claude agents.',
-    link: {
-      href: 'https://tracelab-app.vercel.app',
-      label: 'Open TraceLab',
-    },
     photos: [
       {
         src: '/engagement/accel-room.jpg',
@@ -148,27 +148,23 @@ export const engagementEntries: EngagementEntry[] = [
       },
     ],
   },
-  {
-    id: 'first-hackathons',
-    date: 'Aug to Sep 2026',
-    title: 'Cursor and Tech Europe',
-    kind: 'Hackathon',
-    summary:
-      'My first two hackathons. Neither ended with a finished product. Cursor Cybersecurity London is where I started using agentic AI, and I have used it ever since. Tech Europe showed me how people in tech now build with it. I networked and tried the agents.',
-    where:
-      'London. Cursor at Paris Garden on 1 August. Tech Europe at Ilona Rose House on 19 September.',
-    photos: [
-      {
-        src: '/engagement/cursor-london.jpg',
-        alt: 'Event page for the Cursor Cybersecurity London Hackathon on 1 August at Halkin, Paris Garden.',
-      },
-      {
-        src: '/engagement/tech-europe.jpg',
-        alt: 'Event page for the Tech Europe Agentic AI Hack on 19 September at Ilona Rose House, London.',
-      },
-    ],
-  },
 ]
+
+export const traceLabCopy = {
+  title: 'TraceLab',
+  href: 'https://tracelab-app.vercel.app',
+  linkLabel: 'Open TraceLab',
+  highlights: [
+    'Accel AI Innovate London, 15 October 2026. The first hackathon I left with a finished product.',
+    'Private copies of one photo. It shows which belong together and what changed.',
+    'Code measures the files first. A separate sceptic can throw a claim out.',
+    'Pictures stay in the tool. The model only reads the measurements.',
+  ],
+  future: {
+    label: 'Future scope',
+    body: 'This can be added. A whole file can sit hidden inside another file, and the tool would point that out. It can also tell when generative AI changed a picture.',
+  },
+}
 
 /** Chip order follows first appearance, so the data stays the source of truth. */
 export const engagementKinds: EngagementKind[] = [

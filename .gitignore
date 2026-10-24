@@ -39,3 +39,4 @@ Binaries/
 /TestGame.uproject
 *.docx
 /video 3.mov
+.security-audit/

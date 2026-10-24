@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { GlyphText } from '../components/GlyphText'
 import { SequentialClips } from '../components/SequentialClips'
-import { cyberShieldCopy, type StoryCopy } from './copy'
+import { cyberShieldCopy, traceLabCopy, type StoryCopy } from './copy'
 import './StoryPage.css'
 
 export function StoryPage({
@@ -40,6 +40,7 @@ export function StoryPage({
       aria-labelledby={titleId}
       tabIndex={-1}
     >
+      <div className="story__screen" id="cyber-shield" tabIndex={-1}>
       <header className="story__header">
         <h2 id={titleId} className="story__greeting" aria-label={greeting}>
           <GlyphText text={greeting} />
@@ -164,6 +165,213 @@ export function StoryPage({
           </div>
         </aside>
       </div>
+      </div>
+
+      <div className="story__screen story__screen--next" id="tracelab" tabIndex={-1}>
+        <TraceLabBoard />
+      </div>
     </section>
   )
 }
+
+const LIVE_HEIGHT: Record<string, number> = {
+  '/': 1900,
+  '/how': 4000,
+  '/why': 4000,
+  '/app': 1600,
+}
+
+function livePath(src: string) {
+  try {
+    const path = new URL(src).pathname
+    if (path.startsWith('/how')) return '/how'
+    if (path.startsWith('/why')) return '/why'
+    if (path.startsWith('/app')) return '/app'
+  } catch {
+    /* keep the home height */
+  }
+  return '/'
+}
+
+function TraceLabBoard() {
+  const openRef = useRef<HTMLAnchorElement>(null)
+  const noteRef = useRef<HTMLParagraphElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const hintTimer = useRef<number | null>(null)
+  const [src, setSrc] = useState(traceLabCopy.href)
+  const [navAway, setNavAway] = useState(false)
+
+  useEffect(
+    () => () => {
+      if (hintTimer.current !== null) window.clearTimeout(hintTimer.current)
+    },
+    [],
+  )
+
+  useEffect(() => {
+    const viewport = scrollRef.current
+    if (!viewport) return
+
+    const maxOffset = () =>
+      Math.max(0, viewport.scrollHeight - viewport.clientHeight)
+
+    const onWheel = (event: WheelEvent) => {
+      if (maxOffset() <= 0) return
+      const rect = viewport.getBoundingClientRect()
+      if (
+        event.clientX < rect.left ||
+        event.clientX > rect.right ||
+        event.clientY < rect.top ||
+        event.clientY > rect.bottom
+      ) {
+        return
+      }
+      if (
+        (event.deltaY < 0 && viewport.scrollTop <= 0) ||
+        (event.deltaY > 0 && viewport.scrollTop >= maxOffset() - 1)
+      ) {
+        return
+      }
+      event.preventDefault()
+      event.stopPropagation()
+      viewport.scrollTop += event.deltaY
+    }
+
+    const onScroll = () => setNavAway(viewport.scrollTop > 24)
+
+    window.addEventListener('wheel', onWheel, { passive: false, capture: true })
+    viewport.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('wheel', onWheel, { capture: true })
+      viewport.removeEventListener('scroll', onScroll)
+    }
+  }, [])
+
+  const highlightOpen = () => {
+    const link = openRef.current
+    if (!link) return
+    link.classList.remove('is-hint')
+    void link.offsetWidth
+    link.classList.add('is-hint')
+    if (noteRef.current) {
+      noteRef.current.textContent = ''
+      noteRef.current.textContent = 'Open TraceLab to use the tool.'
+    }
+    const clear = () => link.classList.remove('is-hint')
+    link.addEventListener('animationend', clear, { once: true })
+    if (hintTimer.current !== null) window.clearTimeout(hintTimer.current)
+    hintTimer.current = window.setTimeout(clear, 1300)
+  }
+
+  const go = (next: string) => {
+    setSrc(next)
+    const viewport = scrollRef.current
+    if (viewport) viewport.scrollTop = 0
+    setNavAway(false)
+  }
+
+  const step = (direction: number) => {
+    const viewport = scrollRef.current
+    if (!viewport) return
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    viewport.scrollBy({
+      top: direction * viewport.clientHeight * 0.8,
+      behavior: reduce ? 'auto' : 'smooth',
+    })
+  }
+
+  return (
+    <div className="story__board story__board--mirror">
+      <aside className="story__aside" aria-labelledby="tracelab-name">
+        <h3 id="tracelab-name" className="story__aside-title" aria-label="TraceLab">
+          <GlyphText text="TraceLab" />
+        </h3>
+        <div
+          className="story__aside-scroll"
+          tabIndex={0}
+          role="region"
+          aria-label="TraceLab details, scroll for more"
+        >
+          <ul className="story__aside-list">
+            {traceLabCopy.highlights.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+          <a
+            ref={openRef}
+            className="story__app-rect"
+            href={traceLabCopy.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="story__app-text">{traceLabCopy.linkLabel}</span>
+            <span className="story__app-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M7 17 17 7" />
+                <path d="M9 7h8v8" />
+              </svg>
+            </span>
+            <span className="story__sr"> (opens in a new tab)</span>
+          </a>
+          <p className="story__live-note" ref={noteRef} aria-live="polite" />
+          <h4 className="story__aside-kicker">{traceLabCopy.future.label}</h4>
+          <p className="story__aside-future">{traceLabCopy.future.body}</p>
+        </div>
+      </aside>
+
+      <div className="story__stage">
+        <div
+          ref={scrollRef}
+          className="story__live-scroll"
+          tabIndex={0}
+          role="region"
+          aria-label="TraceLab preview. Scroll to read the page."
+          onClick={(event) => {
+            const rect = event.currentTarget.getBoundingClientRect()
+            if (event.clientX > rect.right - 18) return
+            highlightOpen()
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'ArrowDown') {
+              event.preventDefault()
+              step(1)
+            } else if (event.key === 'ArrowUp') {
+              event.preventDefault()
+              step(-1)
+            }
+          }}
+        >
+          <iframe
+            className="story__live"
+            style={{ height: LIVE_HEIGHT[livePath(src)] }}
+            src={src}
+            title="TraceLab pages you can look through. Open TraceLab to use the tool."
+            loading="lazy"
+            // Scripts stay off so the tool cannot run inside the portfolio.
+            sandbox=""
+          />
+        </div>
+        <nav
+          className={navAway ? 'story__live-nav is-away' : 'story__live-nav'}
+          aria-label="TraceLab"
+        >
+          <button type="button" onClick={() => go(traceLabCopy.href)}>
+            TraceLab home
+          </button>
+          <div className="story__live-nav-links">
+            <button type="button" onClick={() => go(`${traceLabCopy.href}/how`)}>
+              How it works
+            </button>
+            <button type="button" onClick={() => go(`${traceLabCopy.href}/why`)}>
+              Why TraceLab
+            </button>
+            <button type="button" onClick={() => go(`${traceLabCopy.href}/app`)}>
+              Open app
+            </button>
+          </div>
+        </nav>
+      </div>
+    </div>
+  )
+}
+

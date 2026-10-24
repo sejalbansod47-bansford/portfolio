@@ -23,9 +23,10 @@ export function useFocusScroll() {
         return
       }
 
-      // Nav already parked the section at its start. Do not pull it back
-      // under the previous page (that left titles mid-viewport).
-      if (isSectionId(target.id)) return
+      // Nav already parked the section, or a project screen, at its start.
+      // Pulling a full screen back by the nav pad reveals the previous page
+      // and leaves the highlight on the wrong item.
+      if (isSectionId(target.id) || target.classList.contains('story__screen')) return
 
       const top = offsetWithin(target, root)
       const height = Math.max(target.offsetHeight, 1)

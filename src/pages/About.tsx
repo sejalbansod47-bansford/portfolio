@@ -19,7 +19,7 @@ const CARD_BACK: Record<CardId, string> = {
 const CARD_TITLE: Record<CardId, string> = {
   art: 'Digital Art',
   design: 'Designing',
-  pics: 'Pictures',
+  pics: 'Photography',
   singing: 'Singing',
   sports: 'Sports',
 }

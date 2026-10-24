@@ -1,41 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
+import { useEffect, useId, useRef, useState } from 'react'
 import { GlyphText } from '../components/GlyphText'
 import { engagementCopy, engagementEntries } from './copy'
+import type { EngagementEntry } from './copy'
 import './Engagement.css'
 
-type OpenPhoto = { entryId: string; index: number }
-
-/**
- * Two short cards. Photos stay as a thumbnail row so the card does not grow
- * with every picture. A photo opens larger; Escape closes it.
- */
+/** Frame 49 closed, Frame 50 open. One glass tile, copy fades in. */
 export function Engagement() {
-  const [open, setOpen] = useState<OpenPhoto | null>(null)
-  const closeRef = useRef<HTMLButtonElement>(null)
-  const triggerRef = useRef<HTMLButtonElement | null>(null)
-
-  const openEntry = engagementEntries.find((entry) => entry.id === open?.entryId)
-  const openPhoto = open && openEntry ? openEntry.photos[open.index] : undefined
-
-  useEffect(() => {
-    if (!openPhoto) return
-    closeRef.current?.focus({ preventScroll: true })
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return
-      event.preventDefault()
-      setOpen(null)
-      triggerRef.current?.focus()
-    }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [openPhoto])
-
-  const close = () => {
-    setOpen(null)
-    triggerRef.current?.focus()
-  }
-
   return (
     <section
       id="engagement"
@@ -51,78 +21,92 @@ export function Engagement() {
         >
           <GlyphText text={engagementCopy.greeting} />
         </h2>
-        <p className="engage__whisper">{engagementCopy.whisper}</p>
       </header>
 
       <ul className="engage__cards">
         {engagementEntries.map((entry) => (
-          <li key={entry.id} className="engage__card">
-            <p className="engage__meta">
-              <span>{entry.date}</span>
-              <span className="engage__kind">{entry.kind}</span>
-            </p>
-            <h3 className="engage__title">{entry.title}</h3>
-            <p className="engage__summary">{entry.summary}</p>
-            <p className="engage__where">{entry.where}</p>
-            {entry.link ? (
-              <a
-                className="engage__link"
-                href={entry.link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {entry.link.label}
-                <span className="engage__sr"> (opens in a new tab)</span>
-              </a>
-            ) : null}
-            <ul className="engage__shots" aria-label={`${entry.title} photos`}>
-              {entry.photos.map((photo, index) => (
-                <li key={photo.src}>
-                  <button
-                    type="button"
-                    className="engage__shot"
-                    aria-label={`View larger. ${photo.alt}`}
-                    onClick={(event) => {
-                      triggerRef.current = event.currentTarget
-                      setOpen({ entryId: entry.id, index })
-                    }}
-                  >
-                    <img src={photo.src} alt="" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </li>
+          <StoryCard key={entry.id} entry={entry} />
         ))}
       </ul>
-
-      {openPhoto
-        ? createPortal(
-            <div className="engage__lightbox" onClick={close}>
-              <div
-                className="engage__lightbox-dialog"
-                role="dialog"
-                aria-modal="true"
-                aria-label={openPhoto.alt}
-                onClick={(event) => event.stopPropagation()}
-                onKeyDown={(event) => {
-                  if (event.key === 'Tab') event.preventDefault()
-                }}
-              >
-                <button
-                  ref={closeRef}
-                  type="button"
-                  className="engage__lightbox-close"
-                  onClick={close}
-                >
-                  Close
-                </button>
-                <img src={openPhoto.src} alt={openPhoto.alt} />
-              </div>
-            </div>,
-            document.querySelector('.app-frame') ?? document.body,
-          )
-        : null}
     </section>
+  )
+}
+
+function StoryCard({ entry }: { entry: EngagementEntry }) {
+  const [open, setOpen] = useState(false)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const storyId = useId()
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      event.preventDefault()
+      setOpen(false)
+      queueMicrotask(() => buttonRef.current?.focus())
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
+
+  return (
+    <li className="engage__card">
+      <div className={open ? 'engage__plate is-open' : 'engage__plate'}>
+        <div className="engage__face">
+          <h3 className="engage__name" aria-label="Accel Hackathon">
+            <span className="engage__name-line">
+              <GlyphText text="Accel" />
+            </span>
+            <span className="engage__name-line">
+              <GlyphText text="Hackathon" />
+            </span>
+          </h3>
+          <div id={storyId} className="engage__copy" aria-hidden={!open} inert={!open}>
+            <p className="engage__summary">{entry.summary}</p>
+          </div>
+          <p className="engage__when" aria-label="London. 15 oct">
+            <GlyphText text="London. 15 oct" />
+          </p>
+        </div>
+
+        <button
+          ref={buttonRef}
+          type="button"
+          className="engage__glass-btn"
+          aria-expanded={open}
+          aria-controls={storyId}
+          aria-label={
+            open
+              ? `Close the note on ${entry.title}`
+              : `Open the note on ${entry.title}`
+          }
+          onClick={() => setOpen((current) => !current)}
+        >
+          {open ? <Minus /> : <Plus />}
+        </button>
+      </div>
+    </li>
+  )
+}
+
+function Plus() {
+  return (
+    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M8 3.5a.5.5 0 0 1 .5.5v3.5H12a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"
+      />
+    </svg>
+  )
+}
+
+function Minus() {
+  return (
+    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M4 7.5h8a.5.5 0 0 1 0 1H4a.5.5 0 0 1 0-1z"
+      />
+    </svg>
   )
 }

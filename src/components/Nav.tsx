@@ -6,7 +6,7 @@ import {
   type KeyboardEvent,
   type MouseEvent,
 } from 'react'
-import { scrollToSection, type SectionId } from '../lib/sections'
+import { scrollToAnchor, scrollToSection, type SectionId } from '../lib/sections'
 import {
   ChevronIcon,
   EmailIcon,
@@ -20,11 +20,11 @@ import { ResumeViewer } from './ResumeViewer'
 import './Nav.css'
 
 type MenuKey = 'projects' | 'experience' | 'contact' | null
-type MenuItem = { label: string; target: SectionId }
+type MenuItem = { label: string; target: SectionId; anchor?: string }
 
 const projectItems: MenuItem[] = [
-  { label: 'Is This For Real', target: 'projects' },
-  { label: 'Cyber Shield', target: 'projects' },
+  { label: 'Cyber Shield', target: 'projects', anchor: 'cyber-shield' },
+  { label: 'TraceLab', target: 'projects', anchor: 'tracelab' },
 ]
 
 const experienceItems: MenuItem[] = [
@@ -73,11 +73,17 @@ export function Nav({ active }: { active: SectionId }) {
     setOpen((current) => (current === key ? null : key))
   }
 
-  const go = (id: SectionId) => (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault()
-    setOpen(null)
-    scrollToSection(id)
-  }
+  const go =
+    (id: SectionId, anchor?: string) =>
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault()
+      setOpen(null)
+      if (!anchor) {
+        scrollToSection(id)
+        return
+      }
+      scrollToAnchor(id, anchor)
+    }
 
   return (
     <header className="mp-nav" ref={navRef}>
@@ -227,7 +233,7 @@ export function Nav({ active }: { active: SectionId }) {
                 <a
                   className="mp-nav__social"
                   role="menuitem"
-                  href="https://github.com/"
+                  href="https://github.com/sejalbansod47-bansford"
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -241,7 +247,7 @@ export function Nav({ active }: { active: SectionId }) {
                 <a
                   className="mp-nav__social"
                   role="menuitem"
-                  href="https://www.linkedin.com/"
+                  href="https://www.linkedin.com/in/sejal-bansod-258654271/"
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -255,7 +261,7 @@ export function Nav({ active }: { active: SectionId }) {
                 <a
                   className="mp-nav__social"
                   role="menuitem"
-                  href="mailto:hello@example.com"
+                  href="mailto:sejalbansod47@gmail.com"
                 >
                   <span className="mp-nav__social-label">Email</span>
                   <span className="mp-nav__social-icon" aria-hidden="true">
@@ -289,7 +295,10 @@ function Dropdown({
   open: boolean
   onToggle: () => void
   items: MenuItem[]
-  onNavigate: (id: SectionId) => (event: MouseEvent<HTMLAnchorElement>) => void
+  onNavigate: (
+    id: SectionId,
+    anchor?: string,
+  ) => (event: MouseEvent<HTMLAnchorElement>) => void
   widthClass: string
   active?: boolean
   chevron?: boolean
@@ -354,8 +363,8 @@ function Dropdown({
               <a
                 className="mp-nav__menu-item"
                 role="menuitem"
-                href={sectionHref(item.target)}
-                onClick={onNavigate(item.target)}
+                href={item.anchor ? `#${item.anchor}` : sectionHref(item.target)}
+                onClick={onNavigate(item.target, item.anchor)}
               >
                 {item.label}
               </a>

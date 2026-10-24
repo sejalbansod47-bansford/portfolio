@@ -146,8 +146,8 @@
 
 .story__live-nav button:hover,
 .story__live-nav button:focus-visible {
-  background: color-mix(in srgb, var(--e) 55%, transparent);
-  color: var(--a);
+  background: transparent;
+  color: transparent;
 }
 
 .story__live-nav button:focus-visible {

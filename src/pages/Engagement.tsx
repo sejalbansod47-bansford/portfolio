@@ -53,19 +53,29 @@ function StoryCard({ entry }: { entry: EngagementEntry }) {
     <li className="engage__card">
       <div className={open ? 'engage__plate is-open' : 'engage__plate'}>
         <div className="engage__face">
-          <h3 className="engage__name" aria-label="Accel Hackathon">
-            <span className="engage__name-line">
-              <GlyphText text="Accel" />
-            </span>
-            <span className="engage__name-line">
-              <GlyphText text="Hackathon" />
-            </span>
+          <h3 className="engage__name" aria-label={entry.title}>
+            {entry.nameLines.map((line) => (
+              <span key={line} className="engage__name-line">
+                <GlyphText text={line} />
+              </span>
+            ))}
           </h3>
           <div id={storyId} className="engage__copy" aria-hidden={!open} inert={!open}>
             <p className="engage__summary">{entry.summary}</p>
+            {open && entry.link ? (
+              <a
+                className="engage__link"
+                href={entry.link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {entry.link.label}
+                <span className="engage__sr"> (opens in a new tab)</span>
+              </a>
+            ) : null}
           </div>
-          <p className="engage__when" aria-label="London. 15 oct">
-            <GlyphText text="London. 15 oct" />
+          <p className="engage__when" aria-label={entry.when}>
+            <GlyphText text={entry.when} />
           </p>
         </div>
 

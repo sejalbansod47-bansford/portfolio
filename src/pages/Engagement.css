@@ -33,6 +33,8 @@
   position: relative;
   z-index: 2;
   display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
   margin: 40px 0 0;
   padding: 0;
   list-style: none;
@@ -48,8 +50,8 @@
   height: 350px;
   overflow: hidden;
   isolation: isolate;
-  /* Frame 49 fill #18544c at 47%, glass radius 4 */
-  background: rgb(24 84 76 / 47%);
+  /* Mid shade between 47% and 34% of Frame 49 #18544c */
+  background: rgb(24 84 76 / 40%);
   color: #12372f;
   transition: box-shadow 0.48s var(--ease);
 }
@@ -157,6 +159,37 @@
   color: #dfdfd7;
 }
 
+.engage__link {
+  display: inline-block;
+  margin: 10px 0 8px;
+  color: var(--color-on-band);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.engage__link:hover,
+.engage__link:focus-visible {
+  color: var(--color-white);
+}
+
+.engage__link:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.engage__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
 .engage__glass-btn {
   position: absolute;
   z-index: 3;
@@ -197,7 +230,7 @@
 @media (prefers-reduced-transparency: reduce) {
   .engage__plate,
   .engage__plate.is-open {
-    background: rgb(24 84 76 / 88%);
+    background: rgb(24 84 76 / 80%);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }

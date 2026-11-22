@@ -88,7 +88,7 @@ export const experienceRole = {
 
 export const engagementCopy = {
   greeting: 'Engagement',
-  whisper: 'THE ONE I SHIPPED',
+  whisper: 'THE ONES I SHIPPED',
 }
 
 export type EngagementKind =
@@ -106,10 +106,14 @@ export type EngagementEntry = {
   id: string
   /** Month and year, shown in place of a running number */
   date: string
+  /** Two lines on the glass tile, like Accel / Hackathon */
+  nameLines: [string, string]
   title: string
   kind: EngagementKind
   /** Short enough to sit in a half width card */
   summary: string
+  /** Small caption under the title, e.g. London. 15 oct */
+  when: string
   where: string
   link?: { href: string; label: string }
   photos: EngagementPhoto[]
@@ -118,10 +122,25 @@ export type EngagementEntry = {
 /** Newest first. */
 export const engagementEntries: EngagementEntry[] = [
   {
+    id: 'hack-the-trent-clonebrief',
+    date: '20 Nov 2026',
+    nameLines: ['Hack the', 'Trent'],
+    title: 'CloneBrief at Hack the Trent',
+    kind: 'Hackathon',
+    summary:
+      'Hack the Trent was one evening at NTU Clifton. Lovable, AWS, and BuilderBase backed it, and you had to ship a working demo. That is where CloneBrief came from. People hype a free UI kit and skip the postinstall script. You paste a GitHub link. It reads the repo as text and shows what would run on clone, open, install, and run. It never runs the repo. It also checks whether a chatbot\'s package names are real. Next it can preview the kit in a sandbox you throw away.',
+    when: 'Nottingham. 20 nov',
+    where: 'NTU Clifton Campus, Pavilion PAV123. One evening, 20 November 2026.',
+    link: { href: 'https://clonebrief.lovable.app/', label: 'Open CloneBrief' },
+    photos: [],
+  },
+  {
     id: 'accel-tracelab',
     date: '15 Oct 2026',
+    nameLines: ['Accel', 'Hackathon'],
     title: 'TraceLab at Accel',
     kind: 'Hackathon',
+    when: 'London. 15 oct',
     summary:
       'Accel handed out credits from a lot of companies, and the task was a swarm of agents. That is where TraceLab came from. The digital investigations module made me want a way to gather evidence when a picture has been changed. You drop private copies of one photo. It shows which belong together and what changed. A separate sceptic can throw a claim out. The pictures stay in the tool. Next it can tell when a whole file is hidden inside another file, and when generative AI changed a picture.',
     where: '83 Rivington Street, London. One day, building long running Claude agents.',

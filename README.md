@@ -1,4 +1,4 @@
-# Mini Portfolio
+#Portfolio
 
 Vite + React + TypeScript portfolio scaffold.
 

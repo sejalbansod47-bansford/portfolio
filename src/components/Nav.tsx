@@ -25,6 +25,7 @@ type MenuItem = { label: string; target: SectionId; anchor?: string }
 const projectItems: MenuItem[] = [
   { label: 'Cyber Shield', target: 'projects', anchor: 'cyber-shield' },
   { label: 'TraceLab', target: 'projects', anchor: 'tracelab' },
+  { label: 'CloneBrief', target: 'projects', anchor: 'clonebrief' },
 ]
 
 const experienceItems: MenuItem[] = [

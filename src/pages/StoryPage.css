@@ -18,12 +18,10 @@
   outline: none;
 }
 
-/* TraceLab follows Cyber Shield directly. The last screen still fills a
-   frame so About stays a page below it. */
+/* TraceLab and CloneBrief follow Cyber Shield. A little air before the next block. */
 .story__screen--next {
-  min-height: var(--frame-h, var(--artboard-h));
   padding-top: calc(var(--nav-top) + var(--nav-height) + 24px);
-  padding-bottom: 48px;
+  padding-bottom: 40px;
 }
 
 .story__screen--next .story__board {

@@ -20,7 +20,7 @@ export function OnePage() {
         scrollToSection(id, { focus: false })
         return
       }
-      if (id !== 'tracelab' && id !== 'cyber-shield') return
+      if (id !== 'tracelab' && id !== 'cyber-shield' && id !== 'clonebrief') return
       const root = getScrollRoot()
       const el = document.getElementById(id)
       if (!root || !el) return

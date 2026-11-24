@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { GlyphText } from '../components/GlyphText'
 import { SequentialClips } from '../components/SequentialClips'
-import { cyberShieldCopy, traceLabCopy, type StoryCopy } from './copy'
+import { cloneBriefCopy, cyberShieldCopy, traceLabCopy, type StoryCopy } from './copy'
 import './StoryPage.css'
 
 export function StoryPage({
@@ -169,6 +169,10 @@ export function StoryPage({
 
       <div className="story__screen story__screen--next" id="tracelab" tabIndex={-1}>
         <TraceLabBoard />
+      </div>
+
+      <div className="story__screen story__screen--next" id="clonebrief" tabIndex={-1}>
+        <CloneBriefBoard />
       </div>
     </section>
   )
@@ -371,6 +375,157 @@ function TraceLabBoard() {
           </div>
         </nav>
       </div>
+    </div>
+  )
+}
+
+function CloneBriefBoard() {
+  const openRef = useRef<HTMLAnchorElement>(null)
+  const noteRef = useRef<HTMLParagraphElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const hintTimer = useRef<number | null>(null)
+
+  useEffect(
+    () => () => {
+      if (hintTimer.current !== null) window.clearTimeout(hintTimer.current)
+    },
+    [],
+  )
+
+  useEffect(() => {
+    const viewport = scrollRef.current
+    if (!viewport) return
+
+    const maxOffset = () =>
+      Math.max(0, viewport.scrollHeight - viewport.clientHeight)
+
+    const onWheel = (event: WheelEvent) => {
+      if (maxOffset() <= 0) return
+      const rect = viewport.getBoundingClientRect()
+      if (
+        event.clientX < rect.left ||
+        event.clientX > rect.right ||
+        event.clientY < rect.top ||
+        event.clientY > rect.bottom
+      ) {
+        return
+      }
+      if (
+        (event.deltaY < 0 && viewport.scrollTop <= 0) ||
+        (event.deltaY > 0 && viewport.scrollTop >= maxOffset() - 1)
+      ) {
+        return
+      }
+      event.preventDefault()
+      event.stopPropagation()
+      viewport.scrollTop += event.deltaY
+    }
+
+    window.addEventListener('wheel', onWheel, { passive: false, capture: true })
+    return () => window.removeEventListener('wheel', onWheel, { capture: true })
+  }, [])
+
+  const highlightOpen = () => {
+    const link = openRef.current
+    if (!link) return
+    link.classList.remove('is-hint')
+    void link.offsetWidth
+    link.classList.add('is-hint')
+    if (noteRef.current) {
+      noteRef.current.textContent = ''
+      noteRef.current.textContent = 'Open CloneBrief to use the tool.'
+    }
+    const clear = () => link.classList.remove('is-hint')
+    link.addEventListener('animationend', clear, { once: true })
+    if (hintTimer.current !== null) window.clearTimeout(hintTimer.current)
+    hintTimer.current = window.setTimeout(clear, 1300)
+  }
+
+  const step = (direction: number) => {
+    const viewport = scrollRef.current
+    if (!viewport) return
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    viewport.scrollBy({
+      top: direction * viewport.clientHeight * 0.8,
+      behavior: reduce ? 'auto' : 'smooth',
+    })
+  }
+
+  return (
+    <div className="story__board">
+      <div className="story__stage">
+        <div
+          ref={scrollRef}
+          className="story__live-scroll"
+          tabIndex={0}
+          role="region"
+          aria-label="CloneBrief preview. Scroll to read the page."
+          onClick={(event) => {
+            const rect = event.currentTarget.getBoundingClientRect()
+            if (event.clientX > rect.right - 18) return
+            highlightOpen()
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'ArrowDown') {
+              event.preventDefault()
+              step(1)
+            } else if (event.key === 'ArrowUp') {
+              event.preventDefault()
+              step(-1)
+            }
+          }}
+        >
+          <iframe
+            className="story__live"
+            style={{ height: 6400 }}
+            src={cloneBriefCopy.href}
+            title="CloneBrief. Open CloneBrief to use the tool."
+            loading="lazy"
+            // Scripts stay on so the page keeps its own type and colour.
+            sandbox="allow-scripts allow-same-origin"
+          />
+        </div>
+      </div>
+
+      <aside className="story__aside" aria-labelledby="clonebrief-name">
+        <h3 id="clonebrief-name" className="story__aside-title" aria-label="CloneBrief">
+          <GlyphText text="Clone" />
+          <span className="story__aside-break">
+            <GlyphText text="Brief" />
+          </span>
+        </h3>
+        <div
+          className="story__aside-scroll"
+          tabIndex={0}
+          role="region"
+          aria-label="CloneBrief details, scroll for more"
+        >
+          <ul className="story__aside-list">
+            {cloneBriefCopy.highlights.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+          <a
+            ref={openRef}
+            className="story__app-rect"
+            href={cloneBriefCopy.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="story__app-text">{cloneBriefCopy.linkLabel}</span>
+            <span className="story__app-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M7 17 17 7" />
+                <path d="M9 7h8v8" />
+              </svg>
+            </span>
+            <span className="story__sr"> (opens in a new tab)</span>
+          </a>
+          <p className="story__live-note" ref={noteRef} aria-live="polite" />
+          <h4 className="story__aside-kicker">{cloneBriefCopy.future.label}</h4>
+          <p className="story__aside-future">{cloneBriefCopy.future.body}</p>
+        </div>
+      </aside>
     </div>
   )
 }

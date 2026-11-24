@@ -13,7 +13,7 @@ export type StoryCopy = {
 
 export const projectsCopy: StoryCopy = {
   greeting: 'Projects',
-  whisper: 'TWO THINGS I BUILT',
+  whisper: 'THREE THINGS I BUILT',
   cards: [
     {
       title: 'Cyber Shield',
@@ -23,12 +23,17 @@ export const projectsCopy: StoryCopy = {
       title: 'TraceLab',
       line: 'Same photo. Different story.',
     },
+    {
+      title: 'CloneBrief',
+      line: 'Check what runs first.',
+    },
   ],
 }
 
 export const projectLines: Record<string, string> = {
   'Cyber Shield': 'Protection, made visible.',
   TraceLab: 'Same photo. Different story.',
+  CloneBrief: 'Check what runs first.',
 }
 
 export const cyberShieldCopy = {
@@ -131,7 +136,6 @@ export const engagementEntries: EngagementEntry[] = [
       'Hack the Trent was one evening at NTU Clifton. Lovable, AWS, and BuilderBase backed it, and you had to ship a working demo. That is where CloneBrief came from. People hype a free UI kit and skip the postinstall script. You paste a GitHub link. It reads the repo as text and shows what would run on clone, open, install, and run. It never runs the repo. It also checks whether a chatbot\'s package names are real. Next it can preview the kit in a sandbox you throw away.',
     when: 'Nottingham. 20 nov',
     where: 'NTU Clifton Campus, Pavilion PAV123. One evening, 20 November 2026.',
-    link: { href: 'https://clonebrief.lovable.app/', label: 'Open CloneBrief' },
     photos: [],
   },
   {
@@ -168,6 +172,22 @@ export const engagementEntries: EngagementEntry[] = [
     ],
   },
 ]
+
+export const cloneBriefCopy = {
+  title: 'CloneBrief',
+  href: 'https://clonebrief.lovable.app/',
+  linkLabel: 'Open CloneBrief',
+  highlights: [
+    'Hack the Trent, 20 November 2026. One evening at NTU Clifton, with Lovable, AWS, and BuilderBase.',
+    'Paste a GitHub link. It shows what would run on clone, open, install, and run.',
+    'The repo is read as text. CloneBrief never runs it.',
+    "It also checks whether a chatbot's package names are real.",
+  ],
+  future: {
+    label: 'Future scope',
+    body: 'Next it can preview the kit in a sandbox you throw away.',
+  },
+}
 
 export const traceLabCopy = {
   title: 'TraceLab',

@@ -6,9 +6,6 @@ import { TOOL_WINDOWS, type ToolId } from './experienceTools'
 import './Experience.css'
 
 const TITLE = experienceRole.title
-const LENS = 29
-const SCAN_MS = 900
-const GLASS = 58
 /** Icons nav: logo box 28px, gap 24px — scroll bar matches logo height */
 const ICON_SIZE = 28
 const ICON_GAP = 24
@@ -22,26 +19,15 @@ function prefersReducedMotion() {
   )
 }
 
-function easeOutCubic(t: number) {
-  return 1 - (1 - t) ** 3
-}
-
 export function Experience() {
   const sectionRef = useRef<HTMLElement>(null)
   const [inView, setInView] = useState(false)
-  const titleRef = useRef<HTMLHeadingElement>(null)
-  const letterRefs = useRef<(HTMLSpanElement | null)[]>([])
-  const [parked, setParked] = useState(prefersReducedMotion)
-  const [pos, setPos] = useState({ x: 0, y: 0 })
-  const [glassOpacity, setGlassOpacity] = useState(0)
-  const [hotIndex, setHotIndex] = useState(-1)
   const [bulletsOn, setBulletsOn] = useState(prefersReducedMotion)
   const [tool, setTool] = useState<ToolId>('cypress')
 
   const active = TOOL_WINDOWS.find((t) => t.id === tool) ?? TOOL_WINDOWS[0]
   const toolIndex = TOOL_WINDOWS.findIndex((t) => t.id === tool)
 
-  // Run the title scan + bullet entrance once the section scrolls into view
   useEffect(() => {
     const section = sectionRef.current
     if (!section) return
@@ -57,7 +43,6 @@ export function Experience() {
     return () => io.disconnect()
   }, [])
 
-  // Bullet entrance: first reveal waits for the title scan, tool switches replay quickly
   const bulletsRevealed = useRef(false)
   useEffect(() => {
     if (prefersReducedMotion()) {
@@ -66,7 +51,7 @@ export function Experience() {
     }
     if (!inView) return
     setBulletsOn(false)
-    const delay = bulletsRevealed.current ? 40 : SCAN_MS + 120
+    const delay = bulletsRevealed.current ? 40 : 80
     const id = window.setTimeout(() => {
       bulletsRevealed.current = true
       setBulletsOn(true)
@@ -74,87 +59,6 @@ export function Experience() {
     return () => window.clearTimeout(id)
   }, [tool, inView])
 
-  useEffect(() => {
-    if (parked) {
-      setHotIndex(-1)
-      return
-    }
-    if (!inView) return
-
-    let raf = 0
-    let start = 0
-    let cancelled = false
-
-    // Layout offsets (artboard px), not client rects — the frame is CSS-scaled
-    const measure = () => {
-      const title = titleRef.current
-      if (!title) return null
-      // Start left of the first letter; leave past the last (no parking slot)
-      const x0 = title.offsetLeft - GLASS - 4
-      const y0 = title.offsetTop + title.offsetHeight / 2 - GLASS / 2
-      const x1 = title.offsetLeft + title.offsetWidth + GLASS * 0.65
-      const y1 = y0
-      return { x0, y0, x1, y1 }
-    }
-
-    const finish = () => {
-      if (cancelled) return
-      setHotIndex(-1)
-      setGlassOpacity(0)
-      setParked(true)
-    }
-
-    const tick = (now: number) => {
-      if (cancelled) return
-      if (!start) start = now
-      const t = Math.min(1, (now - start) / SCAN_MS)
-      const p = easeOutCubic(t)
-      const m = measure()
-      if (m) {
-        const x = m.x0 + (m.x1 - m.x0) * p
-        const y = m.y0 + (m.y1 - m.y0) * p
-        setPos({ x, y })
-        setGlassOpacity(t < 0.78 ? 1 : Math.max(0, 1 - (t - 0.78) / 0.22))
-
-        const lensX = x + LENS
-        let best = -1
-        let bestDist = Infinity
-        letterRefs.current.forEach((el, i) => {
-          if (!el || TITLE[i] === ' ') return
-          const cx = el.offsetLeft + el.offsetWidth / 2
-          const d = Math.abs(cx - lensX)
-          if (d < bestDist && d < Math.max(28, el.offsetWidth * 1.6)) {
-            bestDist = d
-            best = i
-          }
-        })
-        setHotIndex(best)
-      }
-
-      if (t < 1) raf = requestAnimationFrame(tick)
-      else finish()
-    }
-
-    const kick = () => {
-      if (cancelled) return
-      const m = measure()
-      if (m) {
-        setPos({ x: m.x0, y: m.y0 })
-        setGlassOpacity(1)
-      }
-      raf = requestAnimationFrame(tick)
-    }
-
-    const failsafe = window.setTimeout(finish, SCAN_MS + 250)
-    if (document.fonts?.ready) document.fonts.ready.then(kick)
-    else kick()
-
-    return () => {
-      cancelled = true
-      cancelAnimationFrame(raf)
-      window.clearTimeout(failsafe)
-    }
-  }, [parked, inView])
 
   return (
     <section
@@ -168,35 +72,7 @@ export function Experience() {
         <div className="xp__body">
           <header className="xp__intro">
             <div className="xp__heading">
-              <h2
-                className="xp__title"
-                ref={titleRef}
-                aria-label={TITLE}
-              >
-                {TITLE.split('').map((char, i) => (
-                  <span
-                    key={`${char}-${i}`}
-                    ref={(node) => {
-                      letterRefs.current[i] = node
-                    }}
-                    className={
-                      i === hotIndex ? 'xp__letter is-hot' : 'xp__letter'
-                    }
-                  >
-                    {char === ' ' ? '\u00a0' : char}
-                  </span>
-                ))}
-              </h2>
-              <span
-                className="xp__glass"
-                style={{
-                  transform: `translate3d(${pos.x}px, ${pos.y}px, 0)`,
-                  opacity: glassOpacity,
-                }}
-                aria-hidden="true"
-              >
-                <LoupeMark />
-              </span>
+              <h2 className="xp__title">{TITLE}</h2>
             </div>
             <p className="xp__lede">
               {experienceRole.company} · {experienceRole.dates} ·{' '}
@@ -361,27 +237,6 @@ function ToolMark({ id }: { id: ToolId }) {
   return <BrowserStackMark />
 }
 
-function LoupeMark() {
-  return (
-    <svg width={58} height={58} viewBox="0 0 58 58" fill="none" aria-hidden>
-      <path
-        d="M20.5382 10.9811C17.7349 11.089 15.2006 12.0895 13.8457 13.4461C13.696 13.5957 13.5183 13.7143 13.3228 13.7952C13.1272 13.8761 12.9177 13.9177 12.7061 13.9177C12.4945 13.9176 12.2849 13.8758 12.0894 13.7948C11.894 13.7137 11.7164 13.595 11.5668 13.4453C11.4172 13.2956 11.2986 13.1179 11.2177 12.9224C11.1367 12.7268 11.0951 12.5173 11.0952 12.3057C11.0953 12.094 11.137 11.8845 11.2181 11.689C11.2991 11.4936 11.4179 11.316 11.5676 11.1664C13.6572 9.07678 17.0598 7.89102 20.4125 7.76052C23.7878 7.63002 27.4724 8.55318 30.0534 11.1342C30.3554 11.4365 30.5251 11.8464 30.5249 12.2738C30.5248 12.7012 30.3549 13.111 30.0525 13.4131C29.7502 13.7152 29.3403 13.8848 28.9129 13.8846C28.4856 13.8845 28.0757 13.7146 27.7736 13.4123C26.0175 11.6545 23.3206 10.8715 20.5382 10.9795"
-        fill="currentColor"
-      />
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M36.9522 34.4518C40.1465 30.6766 41.8959 25.8895 41.8886 20.9443C41.8886 9.3766 32.512 0 20.9443 0C9.3766 0 0 9.3766 0 20.9443C0 32.512 9.3766 41.8886 20.9443 41.8886C26.0918 41.8886 30.8042 40.0326 34.4518 36.9522L33.8331 40.5095L45.9389 52.6153L52.6153 45.9389L40.5095 33.8331L36.9522 34.4518ZM20.9443 37.0553C29.8424 37.0553 37.0553 29.8424 37.0553 20.9443C37.0553 12.0462 29.8424 4.8333 20.9443 4.8333C12.0462 4.8333 4.8333 12.0462 4.8333 20.9443C4.8333 29.8424 12.0462 37.0553 20.9443 37.0553Z"
-        fill="currentColor"
-      />
-      <path
-        d="M48.2168 54.8932L54.8932 48.2168L57.0778 50.4014C58.3071 51.6307 58.3071 53.6236 57.0778 54.8513L54.8513 57.0778C53.622 58.3071 51.6291 58.3071 50.4014 57.0778L48.2168 54.8932Z"
-        fill="currentColor"
-      />
-    </svg>
-  )
-}
-
 function CypressMark() {
   return (
     <svg width={26} height={26} viewBox="0 0 26 26" fill="none" aria-hidden>
@@ -447,12 +302,12 @@ function BrowserStackMark() {
       <path
         d="M4.5 8.5c0-1.1.9-2 2-2h13c1.1 0 2 .9 2 2v1.2c0 .7-.4 1.3-1 1.6l-7.2 3.4c-.5.2-1.1.2-1.6 0L5.5 11.3c-.6-.3-1-.9-1-1.6V8.5z"
         fill="currentColor"
-        opacity="0.35"
+        opacity="0.55"
       />
       <path
         d="M4.5 13.2c0-.4.2-.7.5-.9l7.2-3.4c.5-.2 1.1-.2 1.6 0l7.2 3.4c.3.2.5.5.5.9v1.3c0 .7-.4 1.3-1 1.6l-7.2 3.4c-.5.2-1.1.2-1.6 0l-7.2-3.4c-.6-.3-1-.9-1-1.6v-1.3z"
         fill="currentColor"
-        opacity="0.65"
+        opacity="0.8"
       />
       <path
         d="M5 17.8l7.2 3.4c.5.2 1.1.2 1.6 0l7.2-3.4c.3-.2.5-.5.5-.9v-.2l-7.5 3.5c-.5.2-1.1.2-1.6 0L4.5 16.7v.2c0 .4.2.7.5.9z"

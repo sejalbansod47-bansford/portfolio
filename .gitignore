@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 dist
+.vercel
 dist-ssr
 *.local
 
@@ -22,3 +23,20 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.vercel
+
+# Unreal generated data. The project content is tracked.
+DerivedDataCache/
+Intermediate/
+Saved/
+Binaries/
+
+# The 5.8 folder is the project. These are the same files again.
+/CyberQuest_level1_3_working/
+/CyberQuest_level1_3_working.zip
+/CyberEscape_Room.uproject
+/CyberQuest.uproject
+/TestGame.uproject
+*.docx
+/video 3.mov
+.security-audit/

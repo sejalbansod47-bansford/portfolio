@@ -1,21 +1,18 @@
-/* In flow, not absolute like the other sections, so the list can grow past one
-   artboard as entries pile up. */
+/* Frame 49 closed / Frame 50 open. Translucent glass tile. */
 .engage {
   position: relative;
   box-sizing: border-box;
   width: 100%;
   min-height: var(--frame-h, var(--artboard-h));
   margin: 0;
-  padding: 200px 60px var(--page-inset);
+  padding: calc(var(--nav-top) + var(--nav-height) + 24px) var(--page-inset)
+    var(--page-inset);
   outline: none;
 }
 
 .engage__header {
   position: relative;
   z-index: 3;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
   width: 100%;
 }
 
@@ -27,319 +24,230 @@
   line-height: 1;
   letter-spacing: 0;
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+  font-feature-settings: 'liga' 0, 'dlig' 0, 'calt' 0, 'rlig' 0;
+  font-variant-ligatures: none;
   color: var(--color-on-gradient);
 }
 
-.engage__whisper {
-  margin: 0;
-  max-width: 28rem;
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.3;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  text-align: right;
-  color: var(--a);
-}
-
-.engage__chips {
+.engage__cards {
   position: relative;
   z-index: 2;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 40px;
-}
-
-/* Highlights are rings, shadow and a small lift — no pale fills over the
-   gradient, which washed out against it. */
-.engage__chip {
-  padding: 7px 14px;
-  border: 1px solid color-mix(in srgb, var(--a) 28%, transparent);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--b);
-  font-family: var(--font-sans);
-  font-size: 13px;
-  line-height: 1;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  transition:
-    border-color var(--duration) var(--ease),
-    box-shadow var(--duration) var(--ease),
-    color var(--duration) var(--ease),
-    transform var(--duration) var(--ease);
-}
-
-.engage__chip:hover,
-.engage__chip:focus-visible {
-  color: var(--a);
-  border-color: var(--a);
-  box-shadow:
-    inset 0 0 0 1px var(--a),
-    0 4px 12px color-mix(in srgb, var(--a) 20%, transparent);
-  transform: scale(1.06);
-}
-
-.engage__chip:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 3px;
-}
-
-/* Selected = thicker ring + lift. No fill, so it cannot wash to cream. */
-.engage__chip.is-on {
-  background: transparent;
-  border-color: var(--a);
-  color: var(--a);
-  box-shadow:
-    inset 0 0 0 1.5px var(--a),
-    0 5px 14px color-mix(in srgb, var(--a) 22%, transparent);
-  transform: scale(1.08);
-}
-
-.engage__chip.is-on:hover,
-.engage__chip.is-on:focus-visible {
-  background: transparent;
-  color: var(--a);
-  box-shadow:
-    inset 0 0 0 1.5px var(--a),
-    0 5px 14px color-mix(in srgb, var(--a) 22%, transparent);
-}
-
-.engage__split {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: 300px minmax(0, 1fr);
-  gap: 48px;
-  width: 100%;
-  min-height: var(--engage-panel-min-h);
-  margin-top: var(--engage-list-gap);
-}
-
-.engage__list {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  overflow: visible;
-  border-top: 1px solid color-mix(in srgb, var(--a) 18%, transparent);
-}
-
-.engage__list > li {
-  display: block;
-  margin: 0;
-  padding: 0;
-}
-
-.engage__tab {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  width: 100%;
-  padding: 14px 12px;
-  border: 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--a) 18%, transparent);
-  border-left: 2px solid transparent;
-  background: transparent;
-  color: var(--ink);
-  text-align: left;
-  cursor: pointer;
-  transform-origin: left center;
-  transition:
-    border-color var(--duration) var(--ease),
-    box-shadow var(--duration) var(--ease),
-    transform var(--duration) var(--ease);
-}
-
-.engage__tab:hover,
-.engage__tab:focus-visible {
-  background: transparent;
-  box-shadow:
-    inset 0 0 0 1px var(--b),
-    0 4px 12px color-mix(in srgb, var(--a) 16%, transparent);
-  transform: translateX(3px) scale(1.02);
-}
-
-.engage__tab:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
-}
-
-/* Selected row: left rule, a ring, a lift — never a cream fill */
-.engage__tab.is-on {
-  background: transparent;
-  border-left-color: var(--a);
-  box-shadow:
-    inset 0 0 0 1.5px var(--a),
-    0 6px 16px color-mix(in srgb, var(--a) 20%, transparent);
-  transform: translateX(4px) scale(1.03);
-}
-
-.engage__tab.is-on:hover,
-.engage__tab.is-on:focus-visible {
-  background: transparent;
-  transform: translateX(4px) scale(1.03);
-}
-
-.engage__tab-date {
-  font-family: var(--font-sans);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  color: var(--b);
-}
-
-.engage__tab-title {
-  font-family: var(--font-label);
-  font-size: 17px;
-  line-height: 1.2;
-  color: var(--ink);
-}
-
-.engage__panel {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: 26px 30px 30px;
-  box-sizing: border-box;
-  border-radius: var(--radius-card);
-  background: color-mix(in srgb, var(--d) 55%, transparent);
-  border: 1px solid color-mix(in srgb, var(--f) 45%, transparent);
-  box-shadow: 0 4px 24px color-mix(in srgb, var(--a) 12%, transparent);
-}
-
-.engage__panel:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
-}
-
-@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .engage__panel {
-    backdrop-filter: blur(var(--nav-glass-blur)) saturate(1.35);
-    -webkit-backdrop-filter: blur(var(--nav-glass-blur)) saturate(1.35);
-  }
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .engage__panel {
-    background: var(--d);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-}
-
-.engage__panel-meta {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  margin: 0;
-  font-family: var(--font-sans);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  color: var(--b);
-}
-
-.engage__panel-kind {
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.engage__panel-title {
-  margin: -8px 0 0;
-  font-family: var(--font-label);
-  font-size: var(--story-card-title-size);
-  font-weight: 400;
-  line-height: 1.2;
-  color: var(--ink);
-}
-
-.engage__panel-summary {
-  margin: 0;
-  max-width: 36rem;
-  font-family: var(--font-sans);
-  font-size: var(--text-lede-size);
-  line-height: 1.4;
-  color: var(--ink);
-}
-
-.engage__facts {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
-  margin: 4px 0 0;
-}
-
-.engage__fact dt {
-  margin: 0 0 6px;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--b);
-}
-
-.engage__fact dd {
-  margin: 0;
-  font-family: var(--font-sans);
-  font-size: 15px;
-  line-height: 1.5;
-  color: var(--ink);
-}
-
-.engage__shots {
-  display: flex;
-  gap: 12px;
-  margin: 0;
+  margin: 40px 0 0;
   padding: 0;
   list-style: none;
 }
 
-.engage__shot {
-  width: 132px;
-  height: 88px;
-  border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--d) 55%, transparent);
-  border: 1px solid color-mix(in srgb, var(--f) 45%, transparent);
+.engage__card {
+  margin: 0;
+}
+
+.engage__plate {
+  position: relative;
+  width: 350px;
+  height: 350px;
+  overflow: hidden;
+  isolation: isolate;
+  /* Mid shade between 47% and 34% of Frame 49 #18544c */
+  background: rgb(24 84 76 / 40%);
+  color: #12372f;
+  transition: box-shadow 0.48s var(--ease);
 }
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .engage__shot {
-    backdrop-filter: blur(var(--nav-glass-blur)) saturate(1.35);
-    -webkit-backdrop-filter: blur(var(--nav-glass-blur)) saturate(1.35);
+  .engage__plate {
+    backdrop-filter: blur(4px) saturate(1.15);
+    -webkit-backdrop-filter: blur(4px) saturate(1.15);
+  }
+
+  .engage__plate.is-open {
+    backdrop-filter: blur(18px) saturate(1.3);
+    -webkit-backdrop-filter: blur(18px) saturate(1.3);
   }
 }
 
+.engage__plate.is-open {
+  box-shadow: 0 4px 4px rgb(0 0 0 / 25%);
+}
+
+.engage__face {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.engage__name {
+  position: absolute;
+  top: 97px;
+  left: 12px;
+  right: 12px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 33px;
+  letter-spacing: 0;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+  font-feature-settings: 'liga' 0, 'dlig' 0, 'calt' 0, 'rlig' 0;
+  font-variant-ligatures: none;
+  color: #12372f;
+  transition:
+    top 0.48s var(--ease),
+    left 0.48s var(--ease);
+}
+
+.engage__plate.is-open .engage__name {
+  top: 51px;
+  left: 18px;
+}
+
+.engage__name-line {
+  display: block;
+}
+
+.engage__when {
+  position: absolute;
+  top: 172px;
+  left: 12px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 33px;
+  letter-spacing: 0.12em;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-feature-settings: 'liga' 0, 'dlig' 0, 'calt' 0, 'rlig' 0;
+  font-variant-ligatures: none;
+  color: #dfdfd7;
+  transition:
+    top 0.48s var(--ease),
+    left 0.48s var(--ease);
+}
+
+.engage__plate.is-open .engage__when {
+  top: 316px;
+  left: 23px;
+  line-height: 16px;
+}
+
+.engage__copy {
+  position: absolute;
+  top: 128px;
+  left: 22px;
+  width: 306px;
+  bottom: 42px;
+  overflow: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s var(--ease);
+}
+
+.engage__plate.is-open .engage__copy {
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 0.16s;
+}
+
+.engage__summary {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #dfdfd7;
+}
+
+.engage__link {
+  display: inline-block;
+  margin: 10px 0 8px;
+  color: var(--color-on-band);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.engage__link:hover,
+.engage__link:focus-visible {
+  color: var(--color-white);
+}
+
+.engage__link:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.engage__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.engage__glass-btn {
+  position: absolute;
+  z-index: 3;
+  top: 12px;
+  right: 13px;
+  display: grid;
+  place-items: center;
+  width: 57px;
+  height: 57px;
+  padding: 0;
+  border: 1px solid rgb(255 255 255 / 32%);
+  border-radius: 0;
+  background: rgb(255 255 255 / 8%);
+  color: #faf5ed;
+  box-shadow: 0 10px 22px rgb(0 0 0 / 32%);
+  cursor: pointer;
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .engage__glass-btn {
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+}
+
+.engage__glass-btn:hover,
+.engage__glass-btn:focus-visible {
+  background: rgb(255 255 255 / 16%);
+  box-shadow: 0 12px 26px rgb(0 0 0 / 36%);
+  color: #faf5ed;
+}
+
+.engage__glass-btn:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
 @media (prefers-reduced-transparency: reduce) {
-  .engage__shot {
-    background: var(--d);
+  .engage__plate,
+  .engage__plate.is-open {
+    background: rgb(24 84 76 / 80%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .engage__glass-btn {
+    background: rgb(255 255 255 / 72%);
+    color: #12372f;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
 }
 
-.engage__empty {
-  margin: 0;
-  font-family: var(--font-sans);
-  font-size: 15px;
-  color: var(--b);
-}
-
-/* Keep the rings, drop the movement */
 @media (prefers-reduced-motion: reduce) {
-  .engage__chip,
-  .engage__tab {
+  .engage__name,
+  .engage__when,
+  .engage__copy,
+  .engage__plate {
     transition: none;
-  }
-
-  .engage__chip:hover,
-  .engage__chip:focus-visible,
-  .engage__tab:hover,
-  .engage__tab:focus-visible,
-  .engage__tab.is-on,
-  .engage__tab.is-on:hover,
-  .engage__tab.is-on:focus-visible {
-    transform: none;
   }
 }

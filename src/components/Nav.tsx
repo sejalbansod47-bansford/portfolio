@@ -6,8 +6,7 @@ import {
   type KeyboardEvent,
   type MouseEvent,
 } from 'react'
-import { useActiveSection } from '../hooks/useActiveSection'
-import { scrollToSection, type SectionId } from '../lib/sections'
+import { scrollToAnchor, scrollToSection, type SectionId } from '../lib/sections'
 import {
   ChevronIcon,
   EmailIcon,
@@ -20,28 +19,24 @@ import {
 import { ResumeViewer } from './ResumeViewer'
 import './Nav.css'
 
-type MenuKey = 'projects' | 'experience' | 'engagement' | 'contact' | null
-type MenuItem = { label: string; target: SectionId }
+type MenuKey = 'projects' | 'experience' | 'contact' | null
+type MenuItem = { label: string; target: SectionId; anchor?: string }
 
 const projectItems: MenuItem[] = [
-  { label: 'Is This For Real', target: 'projects' },
-  { label: 'Cyber Shield', target: 'projects' },
+  { label: 'Cyber Shield', target: 'projects', anchor: 'cyber-shield' },
+  { label: 'TraceLab', target: 'projects', anchor: 'tracelab' },
+  { label: 'CloneBrief', target: 'projects', anchor: 'clonebrief' },
 ]
 
 const experienceItems: MenuItem[] = [
   { label: 'Test Engineer', target: 'experience' },
 ]
-const engagementItems: MenuItem[] = [
-  { label: 'Coming soon', target: 'engagement' },
-]
-
 const sectionHref = (id: SectionId) => (id === 'home' ? '/' : `#${id}`)
 
 /** Nav order: Home · Resume · Experience · Projects · About Me · Engagement · Contact */
-export function Nav() {
+export function Nav({ active }: { active: SectionId }) {
   const [open, setOpen] = useState<MenuKey>(null)
   const [resumeOpen, setResumeOpen] = useState(false)
-  const active = useActiveSection()
   const navRef = useRef<HTMLElement>(null)
   const contactId = useId()
   const contactMenuRef = useRef<HTMLUListElement>(null)
@@ -79,11 +74,17 @@ export function Nav() {
     setOpen((current) => (current === key ? null : key))
   }
 
-  const go = (id: SectionId) => (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault()
-    setOpen(null)
-    scrollToSection(id)
-  }
+  const go =
+    (id: SectionId, anchor?: string) =>
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault()
+      setOpen(null)
+      if (!anchor) {
+        scrollToSection(id)
+        return
+      }
+      scrollToAnchor(id, anchor)
+    }
 
   return (
     <header className="mp-nav" ref={navRef}>
@@ -96,10 +97,14 @@ export function Nav() {
         <a
           href={sectionHref('home')}
           className={
-            active === 'home' ? 'mp-nav__home is-active' : 'mp-nav__home'
+            active === 'home' && !resumeOpen
+              ? 'mp-nav__home is-active'
+              : 'mp-nav__home'
           }
           aria-label="Home"
-          aria-current={active === 'home' ? 'location' : undefined}
+          aria-current={
+            active === 'home' && !resumeOpen ? 'location' : undefined
+          }
           data-testid="nav-home"
           onClick={go('home')}
         >
@@ -110,9 +115,16 @@ export function Nav() {
 
         <button
           type="button"
-          className="mp-nav__pill mp-nav__resume"
+          className={[
+            'mp-nav__pill',
+            'mp-nav__resume',
+            resumeOpen ? 'is-active' : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
           aria-haspopup="dialog"
           aria-expanded={resumeOpen}
+          aria-current={resumeOpen ? 'true' : undefined}
           onClick={() => {
             setOpen(null)
             setResumeOpen(true)
@@ -131,7 +143,7 @@ export function Nav() {
           items={experienceItems}
           onNavigate={go}
           widthClass="mp-nav__dropdown--experience"
-          active={active === 'experience'}
+          active={active === 'experience' && !resumeOpen}
         />
 
         <Dropdown
@@ -141,32 +153,39 @@ export function Nav() {
           items={projectItems}
           onNavigate={go}
           widthClass="mp-nav__dropdown--projects"
-          active={active === 'projects'}
+          active={active === 'projects' && !resumeOpen}
         />
 
         <a
           href={sectionHref('about')}
           data-testid="nav-about"
           className={
-            active === 'about'
+            active === 'about' && !resumeOpen
               ? 'mp-nav__pill mp-nav__about is-active'
               : 'mp-nav__pill mp-nav__about'
           }
-          aria-current={active === 'about' ? 'location' : undefined}
+          aria-current={
+            active === 'about' && !resumeOpen ? 'location' : undefined
+          }
           onClick={go('about')}
         >
           About Me
         </a>
 
-        <Dropdown
-          label="Engagement"
-          open={open === 'engagement'}
-          onToggle={() => toggle('engagement')}
-          items={engagementItems}
-          onNavigate={go}
-          widthClass="mp-nav__dropdown--engagement"
-          active={active === 'engagement'}
-        />
+        <a
+          href={sectionHref('engagement')}
+          className={
+            active === 'engagement' && !resumeOpen
+              ? 'mp-nav__pill is-active'
+              : 'mp-nav__pill'
+          }
+          aria-current={
+            active === 'engagement' && !resumeOpen ? 'location' : undefined
+          }
+          onClick={go('engagement')}
+        >
+          Engagement
+        </a>
 
         <div className="mp-nav__contact">
           <button
@@ -215,40 +234,40 @@ export function Nav() {
                 <a
                   className="mp-nav__social"
                   role="menuitem"
-                  href="https://github.com/"
+                  href="https://github.com/sejalbansod47-bansford"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <span className="mp-nav__social-icon">
+                  <span className="mp-nav__social-label">GitHub</span>
+                  <span className="mp-nav__social-icon" aria-hidden="true">
                     <GithubIcon />
                   </span>
-                  <span className="visually-hidden">GitHub</span>
                 </a>
               </li>
               <li role="none">
                 <a
                   className="mp-nav__social"
                   role="menuitem"
-                  href="https://www.linkedin.com/"
+                  href="https://www.linkedin.com/in/sejal-bansod-258654271/"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <span className="mp-nav__social-icon">
+                  <span className="mp-nav__social-label">LinkedIn</span>
+                  <span className="mp-nav__social-icon" aria-hidden="true">
                     <LinkedInIcon />
                   </span>
-                  <span className="visually-hidden">LinkedIn</span>
                 </a>
               </li>
               <li role="none">
                 <a
                   className="mp-nav__social"
                   role="menuitem"
-                  href="mailto:hello@example.com"
+                  href="mailto:sejalbansod47@gmail.com"
                 >
-                  <span className="mp-nav__social-icon">
+                  <span className="mp-nav__social-label">Email</span>
+                  <span className="mp-nav__social-icon" aria-hidden="true">
                     <EmailIcon />
                   </span>
-                  <span className="visually-hidden">Email</span>
                 </a>
               </li>
             </ul>
@@ -271,14 +290,19 @@ function Dropdown({
   onNavigate,
   widthClass,
   active = false,
+  chevron = true,
 }: {
   label: string
   open: boolean
   onToggle: () => void
   items: MenuItem[]
-  onNavigate: (id: SectionId) => (event: MouseEvent<HTMLAnchorElement>) => void
+  onNavigate: (
+    id: SectionId,
+    anchor?: string,
+  ) => (event: MouseEvent<HTMLAnchorElement>) => void
   widthClass: string
   active?: boolean
+  chevron?: boolean
 }) {
   const menuId = useId()
   const menuRef = useRef<HTMLUListElement>(null)
@@ -304,20 +328,27 @@ function Dropdown({
         aria-expanded={open}
         aria-haspopup="menu"
         aria-controls={menuId}
+        aria-current={active ? 'location' : undefined}
         onClick={onToggle}
         onKeyDown={(event) => {
-          if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-            event.preventDefault()
-            focusFirst.current = true
-            if (!open) onToggle()
-            else menuRef.current && menuItems(menuRef.current)[0]?.focus()
-          }
+          const openMenu =
+            event.key === 'ArrowDown' ||
+            event.key === 'ArrowUp' ||
+            event.key === 'Enter' ||
+            event.key === ' '
+          if (!openMenu) return
+          event.preventDefault()
+          focusFirst.current = true
+          if (!open) onToggle()
+          else menuRef.current && menuItems(menuRef.current)[0]?.focus()
         }}
       >
         {label}
-        <span className={open ? 'mp-nav__chevron-box is-up' : 'mp-nav__chevron-box'}>
-          <ChevronIcon />
-        </span>
+        {chevron ? (
+          <span className={open ? 'mp-nav__chevron-box is-up' : 'mp-nav__chevron-box'}>
+            <ChevronIcon />
+          </span>
+        ) : null}
       </button>
       {open ? (
         <ul
@@ -332,8 +363,8 @@ function Dropdown({
               <a
                 className="mp-nav__menu-item"
                 role="menuitem"
-                href={sectionHref(item.target)}
-                onClick={onNavigate(item.target)}
+                href={item.anchor ? `#${item.anchor}` : sectionHref(item.target)}
+                onClick={onNavigate(item.target, item.anchor)}
               >
                 {item.label}
               </a>
@@ -369,5 +400,9 @@ function onMenuKey(event: KeyboardEvent<HTMLUListElement>, close: () => void) {
   } else if (event.key === 'Escape') {
     event.preventDefault()
     close()
+  } else if (event.key === 'Tab') {
+    const last = index === items.length - 1
+    const first = index <= 0
+    if ((!event.shiftKey && last) || (event.shiftKey && first)) close()
   }
 }

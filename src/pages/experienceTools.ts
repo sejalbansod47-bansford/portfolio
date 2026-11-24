@@ -32,7 +32,7 @@ export const TOOL_WINDOWS: ToolWindow[] = [
       },
       {
         title: 'Cucumber feature files',
-        body: 'With Cucumber I wrote the scenario in plain Gherkin — Given / When / Then — so a product owner could read it. Step definitions mapped each sentence to the Cypress commands that actually ran.',
+        body: 'With Cucumber I wrote the scenario in plain Gherkin (Given / When / Then) so a product owner could read it. Step definitions mapped each sentence to the Cypress commands that actually ran.',
       },
       {
         title: 'Keeping the suite going',
@@ -40,20 +40,20 @@ export const TOOL_WINDOWS: ToolWindow[] = [
       },
       {
         title: 'Morning ART triage',
-        body: 'The automated run tests re-ran the full suite overnight, yesterday’s additions included. Cypress made the failures quick to read — you could see exactly where each one broke.',
+        body: 'The automated run tests reran the full suite overnight, yesterday’s additions included. Cypress made the failures quick to read. You could see exactly where each one broke.',
       },
     ],
     primer: [
-      { kind: 'comment', text: '// Cypress — what it is' },
-      { kind: 'code', text: "const layer = 'end-to-end testing'" },
+      { kind: 'comment', text: '// Cypress. What it is' },
+      { kind: 'code', text: "const layer = 'end to end testing'" },
       { kind: 'comment', text: '// JS/TS tests that run in a real browser' },
       { kind: 'code', text: 'click · type · assert  // like a user' },
-      { kind: 'comment', text: '// same run-loop as the app' },
+      { kind: 'comment', text: '// same run loop as the app' },
       { kind: 'code', text: 'timeTravel = snapshots + video on fail' },
       { kind: 'comment', text: '// waits for load and animation for you' },
       { kind: 'code', text: 'also: component · API · a11y checks' },
       { kind: 'comment', text: '// unlike Selenium, it is not a remote driver' },
-      { kind: 'code', text: 'docs.cypress.io  // why-cypress' },
+      { kind: 'code', text: 'docs.cypress.io  // why cypress' },
     ],
   },
   {
@@ -67,7 +67,7 @@ export const TOOL_WINDOWS: ToolWindow[] = [
       },
       {
         title: 'Against the ticket',
-        body: 'Status codes and payloads had to match the acceptance criteria — not only “it returned JSON”.',
+        body: 'Status codes and payloads had to match the acceptance criteria, not only “it returned JSON”.',
       },
       {
         title: 'UI or API?',
@@ -79,9 +79,9 @@ export const TOOL_WINDOWS: ToolWindow[] = [
       },
     ],
     primer: [
-      { kind: 'comment', text: '// Insomnia (Kong) — what it is' },
+      { kind: 'comment', text: '// Insomnia (Kong). What it is' },
       { kind: 'code', text: "const app = 'desktop API client'" },
-      { kind: 'comment', text: '// Postman-class: design, debug, re-run' },
+      { kind: 'comment', text: '// Like Postman: design, debug, rerun' },
       { kind: 'code', text: 'REST · GraphQL · gRPC · WebSockets' },
       { kind: 'comment', text: '// collections + environments + auth helpers' },
       { kind: 'code', text: 'OpenAPI specs · mocks · request chaining' },
@@ -100,7 +100,7 @@ export const TOOL_WINDOWS: ToolWindow[] = [
       },
       {
         title: 'Flipping config for a ticket',
-        body: 'Some tickets needed single sign-on switched on or off for a domain, or an email verification code pulled out to verify a user.',
+        body: 'Some tickets needed single sign on switched on or off for a domain, or an email verification code pulled out to verify a user.',
       },
       {
         title: 'Did the write land?',
@@ -112,9 +112,9 @@ export const TOOL_WINDOWS: ToolWindow[] = [
       },
     ],
     primer: [
-      { kind: 'comment', text: '// MongoDB — what it is' },
+      { kind: 'comment', text: '// MongoDB. What it is' },
       { kind: 'code', text: "const kind = 'document database (NoSQL)'" },
-      { kind: 'comment', text: '// JSON-like docs in collections, not SQL rows' },
+      { kind: 'comment', text: '// JSON like docs in collections, not SQL rows' },
       { kind: 'code', text: 'filter queries · aggregation pipeline' },
       { kind: 'comment', text: '// $match  $group  $lookup' },
       { kind: 'code', text: 'Atlas = hosted cloud' },
@@ -146,14 +146,14 @@ export const TOOL_WINDOWS: ToolWindow[] = [
       },
     ],
     primer: [
-      { kind: 'comment', text: '// AWS CloudWatch — what it is' },
+      { kind: 'comment', text: '// AWS CloudWatch. What it is' },
       { kind: 'code', text: "const kind = 'observability for AWS'" },
       { kind: 'comment', text: '// logs, metrics and traces in one place' },
       { kind: 'code', text: 'log groups › log streams › events' },
       { kind: 'comment', text: '// Logs Insights = queries over the logs' },
       { kind: 'code', text: 'alarms = threshold + notification' },
       { kind: 'code', text: 'dashboards · retention · metric filters' },
-      { kind: 'comment', text: '// X-Ray adds request tracing' },
+      { kind: 'comment', text: '// X Ray adds request tracing' },
       { kind: 'code', text: 'docs.aws.amazon.com/cloudwatch' },
     ],
   },
@@ -176,11 +176,11 @@ export const TOOL_WINDOWS: ToolWindow[] = [
       },
       {
         title: 'A bug someone can reproduce',
-        body: 'Browser, steps, screenshot — enough that the Atlassian ticket did not bounce back.',
+        body: 'Browser, steps, screenshot, enough that the Atlassian ticket did not bounce back.',
       },
     ],
     primer: [
-      { kind: 'comment', text: '// BrowserStack — what it is' },
+      { kind: 'comment', text: '// BrowserStack. What it is' },
       { kind: 'code', text: "const lab = 'cloud of real browsers + phones'" },
       { kind: 'comment', text: '// thousands of browser × OS combinations' },
       { kind: 'code', text: 'Live = manual debug with DevTools' },

@@ -13,7 +13,6 @@
   background: transparent;
   overflow: visible;
   isolation: isolate;
-  pointer-events: none;
 }
 
 .mp-nav__glass {
@@ -21,8 +20,12 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  /* Frame 36: white @ 50% */
-  background: color-mix(in srgb, var(--f) 50%, transparent);
+  /* Glass + a wash of --c/--b (~#A3B1AB) so hover still reads on the motion */
+  background: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--c) 70%, var(--b)) 38%,
+    color-mix(in srgb, var(--f) 50%, transparent)
+  );
   border-bottom: 1px solid color-mix(in srgb, var(--f) 35%, transparent);
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, var(--f) 55%, transparent),
@@ -32,7 +35,11 @@
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .mp-nav__glass {
-    background: color-mix(in srgb, var(--f) 42%, transparent);
+    background: color-mix(
+      in srgb,
+      color-mix(in srgb, var(--c) 70%, var(--b)) 32%,
+      color-mix(in srgb, var(--f) 42%, transparent)
+    );
     backdrop-filter: blur(var(--nav-glass-blur)) saturate(1.45);
     -webkit-backdrop-filter: blur(var(--nav-glass-blur)) saturate(1.45);
   }
@@ -40,7 +47,11 @@
 
 @media (prefers-reduced-transparency: reduce) {
   .mp-nav__glass {
-    background: color-mix(in srgb, var(--f) 88%, var(--e));
+    background: color-mix(
+      in srgb,
+      color-mix(in srgb, var(--c) 70%, var(--b)) 22%,
+      var(--e)
+    );
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
@@ -93,7 +104,7 @@
 .mp-nav__home:focus-visible {
   background: var(--color-focus);
   color: var(--a);
-  box-shadow: 0 4px 4px color-mix(in srgb, var(--a) 25%, transparent);
+  box-shadow: none;
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
@@ -114,6 +125,7 @@
 .mp-nav__home.is-active:focus-visible {
   background: var(--b);
   color: var(--d);
+  box-shadow: none;
   outline-color: var(--color-focus);
 }
 
@@ -183,7 +195,7 @@
 .mp-nav__pill:focus-visible {
   background: var(--color-focus);
   color: var(--a);
-  box-shadow: 0 4px 4px color-mix(in srgb, var(--a) 25%, transparent);
+  box-shadow: none;
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
@@ -216,6 +228,7 @@
 .mp-nav__pill.is-open:focus-visible {
   background: var(--c);
   color: var(--a);
+  box-shadow: none;
   outline-color: var(--color-focus);
 }
 
@@ -223,6 +236,7 @@
 .mp-nav__pill.is-active.is-open:focus-visible {
   background: var(--b);
   color: var(--d);
+  box-shadow: none;
   outline-color: var(--color-focus);
 }
 
@@ -318,8 +332,7 @@
   min-width: 100%;
 }
 
-.mp-nav__dropdown--experience .mp-nav__menu,
-.mp-nav__dropdown--engagement .mp-nav__menu {
+.mp-nav__dropdown--experience .mp-nav__menu {
   min-width: 100%;
 }
 
@@ -344,6 +357,7 @@
   height: auto;
   padding: 4px 10px;
   box-sizing: border-box;
+  border: 1px solid transparent;
   border-radius: var(--nav-menu-item-radius);
   background: transparent;
   color: var(--a);
@@ -354,16 +368,15 @@
   text-decoration: none;
   white-space: nowrap;
   box-shadow: none;
-  transition: background var(--duration) var(--ease), color var(--duration) var(--ease);
+  transition:
+    background var(--duration) var(--ease),
+    border-color var(--duration) var(--ease),
+    color var(--duration) var(--ease);
 }
 
 .mp-nav__menu-item:is(:hover, :focus-visible),
 .mp-nav__social:is(:hover, :focus-visible) {
   background: color-mix(in srgb, var(--e) 30%, transparent);
-}
-
-.mp-nav__menu-item:focus-visible,
-.mp-nav__social:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: -2px;
 }
@@ -380,8 +393,7 @@
   }
 }
 
-.mp-nav__dropdown--experience .mp-nav__menu-item,
-.mp-nav__dropdown--engagement .mp-nav__menu-item {
+.mp-nav__dropdown--experience .mp-nav__menu-item {
   width: auto;
 }
 
@@ -398,7 +410,7 @@
   list-style: none;
   min-width: 0;
   width: max-content;
-  overflow: hidden;
+  overflow: visible;
   background: color-mix(in srgb, var(--e) 30%, transparent);
   box-shadow: 0 4px 4px color-mix(in srgb, var(--a) 25%, transparent);
 }
@@ -406,7 +418,7 @@
 .mp-nav__social {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   flex: 1 1 auto;
   align-self: stretch;
   width: auto;
@@ -414,12 +426,15 @@
   height: auto;
   padding: 4px 8px;
   box-sizing: border-box;
+  border: 1px solid transparent;
   border-radius: var(--nav-menu-item-radius);
   background: transparent;
   box-shadow: none;
   text-decoration: none;
   color: var(--a);
-  transition: background var(--duration) var(--ease);
+  transition:
+    background var(--duration) var(--ease),
+    border-color var(--duration) var(--ease);
 }
 
 /* One box for all three marks — they carry a matched stroke weight */
@@ -435,4 +450,32 @@
   display: block;
   width: 20px;
   height: 20px;
+}
+
+/* Name slides out beside the mark. Hover and keyboard share it. */
+.mp-nav__social-label {
+  max-width: 0;
+  margin-right: 0;
+  overflow: hidden;
+  opacity: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    max-width var(--duration) var(--ease),
+    margin-right var(--duration) var(--ease),
+    opacity var(--duration) var(--ease);
+}
+
+.mp-nav__social:is(:hover, :focus-visible) .mp-nav__social-label {
+  max-width: 6.5rem;
+  margin-right: 8px;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mp-nav__social-label {
+    transition: none;
+  }
 }

@@ -9,10 +9,10 @@
   outline: none;
 }
 
-/* Three screens tall: vertical page scroll through it drives the horizontal rail */
+/* Two screens tall: vertical page scroll through it drives the horizontal rail */
 .about__pin-wrap {
   position: relative;
-  height: calc(var(--frame-h, var(--artboard-h)) * 3);
+  height: calc(var(--frame-h, var(--artboard-h)) * 2);
 }
 
 .about__sticky {
@@ -32,7 +32,8 @@
   gap: var(--about-stack-gap);
   width: 100%;
   height: 100%;
-  padding: calc(var(--nav-top) + var(--nav-height) + var(--about-stack-gap)) 0 0;
+  /* Same top clearance as Projects title (Experience → Projects gap). */
+  padding: calc(var(--nav-top) + var(--nav-height) + 24px) 0 0;
   box-sizing: border-box;
 }
 
@@ -52,11 +53,11 @@
 .about__hello {
   margin: 0;
   font-family: var(--font-display);
-  /* Matches the Experience section heading */
+  /* Matches Experience / Projects / Engagement section headings */
   font-size: var(--xp-title-size);
   font-weight: 400;
-  line-height: var(--text-display-leading);
-  letter-spacing: var(--text-display-tracking);
+  line-height: 1;
+  letter-spacing: 0;
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
   font-feature-settings: 'liga' 0, 'dlig' 0, 'calt' 0, 'rlig' 0;
   font-variant-ligatures: none;
@@ -145,6 +146,36 @@
   -webkit-backface-visibility: hidden;
 }
 
+/* Quiet sheen across the glass face. Transform and opacity only. */
+.about__card-face::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 42%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--e) 72%, transparent),
+    transparent
+  );
+  transform: translateX(-160%);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.65s var(--ease),
+    opacity var(--duration) var(--ease);
+}
+
+.about__card:not(.is-flipped):is(:hover, :focus-within)
+  .about__card-face--front::after,
+.about__card.is-flipped:is(:hover, :focus-within)
+  .about__card-face--back::after {
+  opacity: 1;
+  transform: translateX(280%);
+}
+
 .about__card-face--back {
   transform: rotateY(180deg);
   display: flex;
@@ -197,6 +228,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .about__card-face::after {
+    transition: none;
+    transform: none;
+    opacity: 0;
+  }
+
   .about__card-inner {
     transition: none;
   }

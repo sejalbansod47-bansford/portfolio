@@ -9,13 +9,13 @@ const FOCUSABLE =
   'a[href], button:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])'
 
 export function ResumeViewer({ onClose }: { onClose: () => void }) {
-  const closeRef = useRef<HTMLButtonElement>(null)
+  const downloadRef = useRef<HTMLAnchorElement>(null)
   const windowRef = useRef<HTMLDivElement>(null)
   const titleId = useId()
 
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null
-    closeRef.current?.focus()
+    downloadRef.current?.focus()
 
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -67,12 +67,13 @@ export function ResumeViewer({ onClose }: { onClose: () => void }) {
       >
         <div className="resume-viewer__chrome">
           <span id={titleId} className="resume-viewer__title">
-            Resume — Sejal Bansod
+            Resume: Sejal Bansod
           </span>
           <div className="resume-viewer__actions">
             {/* Frame 37: Menu item · Download (default) */}
             <div className="resume-viewer__menu-item">
               <a
+                ref={downloadRef}
                 className="resume-viewer__action"
                 href={RESUME_SRC}
                 download="Sejal-Bansod-CV.pdf"
@@ -86,7 +87,6 @@ export function ResumeViewer({ onClose }: { onClose: () => void }) {
             {/* Frame 37: Menu item · Close (hover prototype = default hover wash) */}
             <div className="resume-viewer__menu-item">
               <button
-                ref={closeRef}
                 type="button"
                 className="resume-viewer__action"
                 onClick={onClose}

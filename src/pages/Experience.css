@@ -25,7 +25,7 @@
   gap: 56px;
   width: var(--content-w);
   margin: 0 auto;
-  padding: calc(var(--nav-top) + var(--nav-height) + 72px) 0 80px;
+  padding: calc(var(--nav-top) + var(--nav-height) + 24px) 0 80px;
 }
 
 .xp__intro {
@@ -48,8 +48,6 @@
 
 .xp__title {
   margin: 0;
-  display: flex;
-  align-items: baseline;
   flex: 0 0 auto;
   min-width: max-content;
   font-family: var(--font-display);
@@ -62,39 +60,6 @@
   font-variant-ligatures: none;
   color: var(--color-on-gradient);
   white-space: nowrap;
-}
-
-.xp__letter {
-  display: inline-block;
-  transform: scale(1) translateY(0);
-  transform-origin: 50% 70%;
-  transition: transform 120ms var(--ease), color 120ms var(--ease);
-  will-change: transform;
-}
-
-.xp__letter.is-hot {
-  transform: scale(1.48) translateY(-4px);
-  color: var(--a);
-  z-index: 2;
-}
-
-.xp__glass {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 4;
-  width: 58px;
-  height: 58px;
-  color: var(--a);
-  pointer-events: none;
-  opacity: 0;
-  will-change: transform, opacity;
-}
-
-.xp__glass svg {
-  display: block;
-  width: 58px;
-  height: 58px;
 }
 
 .xp__lede {
@@ -282,7 +247,7 @@
 }
 
 .xp__runner-tab {
-  color: var(--b);
+  color: var(--c);
   font-family: var(--font-sans);
   font-size: 16px;
   white-space: nowrap;
@@ -295,8 +260,8 @@
   height: 30px;
   padding: 0 12px;
   border-radius: 20px;
-  background: color-mix(in srgb, var(--a) 70%, var(--b));
-  color: var(--b);
+  background: color-mix(in srgb, var(--b) 55%, var(--a));
+  color: var(--d);
   font-size: 14px;
   line-height: 1;
 }
@@ -392,35 +357,35 @@
   border: 0;
   border-radius: 50%;
   background: transparent;
-  color: var(--b);
+  color: var(--c);
   cursor: pointer;
   transition: color var(--duration) var(--ease);
 }
 
 .xp__icon.is-active {
-  color: var(--d);
+  color: var(--e);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .xp__icon:hover,
   .xp__icon:focus-visible {
-    color: var(--c);
+    color: var(--d);
   }
 
   .xp__icon.is-active:hover,
   .xp__icon.is-active:focus-visible {
-    color: var(--d);
+    color: var(--e);
   }
 }
 
 .xp__icon:focus-visible {
-  color: var(--c);
+  color: var(--d);
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 
 .xp__icon.is-active:focus-visible {
-  color: var(--d);
+  color: var(--e);
 }
 
 .xp__icon-glyph {
@@ -498,7 +463,7 @@
 }
 
 .xp__code--dark .xp__ln {
-  color: color-mix(in srgb, var(--c) 70%, transparent);
+  color: var(--c);
 }
 
 .xp__code--dark .is-comment code {
@@ -544,7 +509,7 @@
   height: 54px;
   padding: 0 14px;
   border-bottom: 1px solid color-mix(in srgb, var(--b) 35%, transparent);
-  color: var(--b);
+  color: var(--c);
 }
 
 .xp__tool-ico {
@@ -569,7 +534,7 @@
   padding: 0 14px;
   border-radius: 4px;
   font-size: 16px;
-  color: var(--b);
+  color: var(--c);
 }
 
 .xp__save {
@@ -638,13 +603,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .xp__letter,
-  .xp__letter.is-hot {
-    transform: none;
-    color: inherit;
-    transition: none;
-  }
-
   .xp__bullet {
     opacity: 1;
     transform: none;

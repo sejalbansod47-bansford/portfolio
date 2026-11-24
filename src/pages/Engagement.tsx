@@ -1,52 +1,11 @@
-import { useRef, useState, type KeyboardEvent } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { GlyphText } from '../components/GlyphText'
-import { engagementCopy, engagementEntries, engagementKinds } from './copy'
-import type { EngagementEntry, EngagementKind } from './copy'
+import { engagementCopy, engagementEntries } from './copy'
+import type { EngagementEntry } from './copy'
 import './Engagement.css'
 
-type Filter = 'All' | EngagementKind
-
-const filters: Filter[] = ['All', ...engagementKinds]
-
-/**
- * Titles on the left, one entry open on the right — the same shape as the
- * Experience studio. Every row is in the tab order; arrows still move between
- * them once one has focus.
- */
+/** Frame 49 closed, Frame 50 open. One glass tile, copy fades in. */
 export function Engagement() {
-  const [filter, setFilter] = useState<Filter>('All')
-  const [picked, setPicked] = useState<string | null>(null)
-  const listRef = useRef<HTMLUListElement>(null)
-
-  const shown =
-    filter === 'All'
-      ? engagementEntries
-      : engagementEntries.filter((entry) => entry.kind === filter)
-  const active = shown.find((entry) => entry.id === picked) ?? shown[0]
-
-  const onKeyDown = (event: KeyboardEvent<HTMLUListElement>) => {
-    const keys = ['ArrowDown', 'ArrowUp', 'Home', 'End']
-    if (!keys.includes(event.key) || shown.length === 0) return
-    const focusedId =
-      shown.find((entry) => `${entry.id}-tab` === document.activeElement?.id)
-        ?.id ?? active?.id
-    if (!focusedId) return
-    event.preventDefault()
-    const index = shown.findIndex((entry) => entry.id === focusedId)
-    const next =
-      event.key === 'ArrowDown'
-        ? (index + 1) % shown.length
-        : event.key === 'ArrowUp'
-          ? (index - 1 + shown.length) % shown.length
-          : event.key === 'Home'
-            ? 0
-            : shown.length - 1
-    setPicked(shown[next].id)
-    listRef.current
-      ?.querySelector<HTMLElement>(`#${shown[next].id}-tab`)
-      ?.focus()
-  }
-
   return (
     <section
       id="engagement"
@@ -62,92 +21,102 @@ export function Engagement() {
         >
           <GlyphText text={engagementCopy.greeting} />
         </h2>
-        <p className="engage__whisper">{engagementCopy.whisper}</p>
       </header>
 
-      <div className="engage__chips" role="group" aria-label="Filter by kind">
-        {filters.map((value) => (
-          <button
-            key={value}
-            type="button"
-            className={filter === value ? 'engage__chip is-on' : 'engage__chip'}
-            aria-pressed={filter === value}
-            onClick={() => setFilter(value)}
-          >
-            {value}
-          </button>
+      <ul className="engage__cards">
+        {engagementEntries.map((entry) => (
+          <StoryCard key={entry.id} entry={entry} />
         ))}
-      </div>
-
-      <div className="engage__split">
-        <ul
-          className="engage__list"
-          aria-label="Engagement entries"
-          ref={listRef}
-          onKeyDown={onKeyDown}
-        >
-          {shown.map((entry) => {
-            const selected = entry.id === active?.id
-            return (
-              <li key={entry.id}>
-                <button
-                  type="button"
-                  id={`${entry.id}-tab`}
-                  className={selected ? 'engage__tab is-on' : 'engage__tab'}
-                  aria-current={selected ? 'true' : undefined}
-                  aria-controls={`${entry.id}-panel`}
-                  onClick={() => setPicked(entry.id)}
-                >
-                  <span className="engage__tab-date">{entry.date}</span>
-                  <span className="engage__tab-title">{entry.title}</span>
-                </button>
-              </li>
-            )
-          })}
-        </ul>
-
-        {active ? (
-          <div
-            className="engage__panel"
-            id={`${active.id}-panel`}
-            aria-labelledby={`${active.id}-tab`}
-          >
-            <p className="engage__panel-meta">
-              <span>{active.date}</span>
-              <span className="engage__panel-kind">{active.kind}</span>
-            </p>
-            <h3 className="engage__panel-title">{active.title}</h3>
-            <p className="engage__panel-summary">{active.summary}</p>
-            <Facts entry={active} />
-            <ul className="engage__shots" aria-label="Photos to come">
-              {Array.from({ length: active.shots }, (_, i) => (
-                <li key={i} className="engage__shot" />
-              ))}
-            </ul>
-          </div>
-        ) : (
-          <p className="engage__empty">Nothing under that filter yet.</p>
-        )}
-      </div>
+      </ul>
     </section>
   )
 }
 
-function Facts({ entry }: { entry: EngagementEntry }) {
+function StoryCard({ entry }: { entry: EngagementEntry }) {
+  const [open, setOpen] = useState(false)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const storyId = useId()
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      event.preventDefault()
+      setOpen(false)
+      queueMicrotask(() => buttonRef.current?.focus())
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
+
   return (
-    <dl className="engage__facts">
-      <div className="engage__fact">
-        <dt>Where</dt>
-        <dd>{entry.where}</dd>
+    <li className="engage__card">
+      <div className={open ? 'engage__plate is-open' : 'engage__plate'}>
+        <div className="engage__face">
+          <h3 className="engage__name" aria-label={entry.title}>
+            {entry.nameLines.map((line) => (
+              <span key={line} className="engage__name-line">
+                <GlyphText text={line} />
+              </span>
+            ))}
+          </h3>
+          <div id={storyId} className="engage__copy" aria-hidden={!open} inert={!open}>
+            <p className="engage__summary">{entry.summary}</p>
+            {open && entry.link ? (
+              <a
+                className="engage__link"
+                href={entry.link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {entry.link.label}
+                <span className="engage__sr"> (opens in a new tab)</span>
+              </a>
+            ) : null}
+          </div>
+          <p className="engage__when" aria-label={entry.when}>
+            <GlyphText text={entry.when} />
+          </p>
+        </div>
+
+        <button
+          ref={buttonRef}
+          type="button"
+          className="engage__glass-btn"
+          aria-expanded={open}
+          aria-controls={storyId}
+          aria-label={
+            open
+              ? `Close the note on ${entry.title}`
+              : `Open the note on ${entry.title}`
+          }
+          onClick={() => setOpen((current) => !current)}
+        >
+          {open ? <Minus /> : <Plus />}
+        </button>
       </div>
-      <div className="engage__fact">
-        <dt>What I did</dt>
-        <dd>{entry.did}</dd>
-      </div>
-      <div className="engage__fact">
-        <dt>What I took</dt>
-        <dd>{entry.took}</dd>
-      </div>
-    </dl>
+    </li>
+  )
+}
+
+function Plus() {
+  return (
+    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M8 3.5a.5.5 0 0 1 .5.5v3.5H12a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"
+      />
+    </svg>
+  )
+}
+
+function Minus() {
+  return (
+    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M4 7.5h8a.5.5 0 0 1 0 1H4a.5.5 0 0 1 0-1z"
+      />
+    </svg>
   )
 }

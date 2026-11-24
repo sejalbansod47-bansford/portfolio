@@ -1,35 +1,39 @@
 import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { isSectionId, scrollToSection } from '../lib/sections'
+import {
+  getScrollRoot,
+  isSectionId,
+  offsetWithin,
+  scrollToSection,
+} from '../lib/sections'
 import { About } from './About'
-import { projectLines, projectsCopy } from './copy'
+import { projectsCopy } from './copy'
 import { Engagement } from './Engagement'
 import { Experience } from './Experience'
 import { Home } from './Home'
 import { StoryPage } from './StoryPage'
 
-const projectCards = Object.entries(projectLines).map(([title, line]) => ({
-  title,
-  line,
-}))
-
 export function OnePage() {
-  const { hash } = useLocation()
-
   useEffect(() => {
-    const id = hash.slice(1)
-    if (!isSectionId(id)) return
-    const raf = requestAnimationFrame(() =>
-      scrollToSection(id, { smooth: false, focus: false }),
-    )
+    const id = window.location.hash.slice(1)
+    const raf = requestAnimationFrame(() => {
+      if (isSectionId(id)) {
+        scrollToSection(id, { focus: false })
+        return
+      }
+      if (id !== 'tracelab' && id !== 'cyber-shield' && id !== 'clonebrief') return
+      const root = getScrollRoot()
+      const el = document.getElementById(id)
+      if (!root || !el) return
+      root.scrollTop = offsetWithin(el, root)
+    })
     return () => cancelAnimationFrame(raf)
-  }, [hash])
+  }, [])
 
   return (
     <div className="onepage">
       <Home />
       <Experience />
-      <StoryPage id="projects" {...projectsCopy} cards={projectCards} />
+      <StoryPage id="projects" {...projectsCopy} />
       <About />
       <Engagement />
     </div>

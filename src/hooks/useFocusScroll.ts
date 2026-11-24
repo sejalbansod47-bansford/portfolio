@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { getScrollRoot, offsetWithin } from '../lib/sections'
+import { getScrollRoot, isSectionId, offsetWithin } from '../lib/sections'
 
 const ABOUT_ORDER = ['art', 'design', 'pics', 'singing', 'sports'] as const
 const NAV_PAD = 80
@@ -22,6 +22,11 @@ export function useFocusScroll() {
         revealAboutCard(root, aboutCard)
         return
       }
+
+      // Nav already parked the section, or a project screen, at its start.
+      // Pulling a full screen back by the nav pad reveals the previous page
+      // and leaves the highlight on the wrong item.
+      if (isSectionId(target.id) || target.classList.contains('story__screen')) return
 
       const top = offsetWithin(target, root)
       const height = Math.max(target.offsetHeight, 1)
